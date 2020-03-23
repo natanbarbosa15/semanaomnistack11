@@ -1,0 +1,16 @@
+# api.yaml For Back-End REST API AdonisJS
+
+env: standard
+runtime: nodejs12
+service: default
+handlers:
+  # Serve all static files
+  - url: /favicon\.ico
+    static_files: build/favicon.ico
+    upload: favicon.ico
+  - url: /static
+    static_dir: build/static
+  - url: /.*
+    secure: always
+    redirect_http_response_code: 301
+    script: auto

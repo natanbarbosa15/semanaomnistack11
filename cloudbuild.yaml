@@ -1,0 +1,25 @@
+steps:
+  - name: gcr.io/cloud-builders/gsutil
+    args:
+      [
+        "cp",
+        "gs://be-the-hero-275300.appspot.com/secrets/frontend/.env",
+        ".env",
+      ]
+    timeout: "600s"
+  - name: node:${_NODE_VERSION}
+    entrypoint: bash
+    args:
+      - "-c"
+      - |
+        yarn install --production
+        yarn run react-scripts build
+    env:
+      - "NODE_ENV=${_NODE_ENV}"
+    timeout: "600s"
+  - name: "gcr.io/cloud-builders/gcloud"
+    args: ["app", "deploy", "client.yaml"]
+    timeout: "600s"
+substitutions:
+  _NODE_VERSION: "12"
+  _NODE_ENV: "production"
