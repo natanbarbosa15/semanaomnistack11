@@ -8,8 +8,8 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(helmet);
-app.use(compression);
+app.use(helmet());
+app.use(compression());
 app.use(routes);
 app.use(errors());
 
