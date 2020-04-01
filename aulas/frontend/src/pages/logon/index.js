@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { FiLogIn } from 'react-icons/fi';
+import { FiLogIn, FiDownload } from 'react-icons/fi';
 
 import api from '../../services/api';
 
@@ -46,6 +46,10 @@ export default function Logon(){
                         <FiLogIn size={16} color="#E02041"/>
                         Não tenho cadastro
                     </Link>
+                    <a className="back-link" target="_blank" rel="noopener noreferrer" href="https://storage.googleapis.com/base-project-272815.appspot.com/bethehero/apk/bethehero.apk">
+                        <FiDownload size={16} color="#E02041"/>
+                        Download APK para Android
+                    </a>
                 </form>
             </section>
             <img src={heroesImg} alt="Heroes" />
