@@ -1,0 +1,5 @@
+tasks:
+  - init: yarn install --production=false
+    command: ENV_SILENT=true adonis serve --dev
+image:
+  file: .gitpod.Dockerfile
