@@ -20,7 +20,11 @@ class IncidentController {
    * @param {View} ctx.view
    */
   async index({ request, response, view }) {
-    const incidents = Incident.all();
+    // Get actual page
+    const page = request.input("page", 1);
+
+    // Query all incidents with specificied paginate, and objects limit per page of 10
+    const incidents = Incident.query().paginate(page, 10);
 
     return incidents;
   }
