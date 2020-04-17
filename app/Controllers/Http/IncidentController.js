@@ -24,7 +24,18 @@ class IncidentController {
     const page = request.input("page", 1);
 
     // Query all incidents with specificied paginate, and objects limit per page of 10
-    const incidents = Incident.query().paginate(page, 10);
+    // TODO Join query with select
+    const incidents = Incident.query()
+      .select([
+        "incidents.*",
+        "users.username",
+        "users.email",
+        "users.whatsapp",
+        "users.city",
+        "users.state",
+      ])
+      .innerJoin("users", "incidents.ong_id", "users.id")
+      .paginate(page, 10);
 
     return incidents;
   }
