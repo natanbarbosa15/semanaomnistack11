@@ -25,4 +25,5 @@ ENV LC_ALL pt_BR.UTF-8
 WORKDIR /usr/src/app
 COPY . .
 RUN yarn global add @adonisjs/cli && yarn install
+EXPOSE 80
 CMD ["yarn", "start"]
