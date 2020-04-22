@@ -24,5 +24,5 @@ ENV LC_ALL pt_BR.UTF-8
 # NodeJS folder and packages installation
 WORKDIR /usr/src/app
 COPY . .
-RUN yarn global add @adonisjs/cli && yarn install
-CMD ["yarn", "start"]
+RUN yarn global add @adonisjs/cli && yarn install && chmod +x ./start.sh
+CMD ["./start.sh"]

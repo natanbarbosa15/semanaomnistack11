@@ -1,0 +1,1 @@
+adonis migration:run && yarn start
