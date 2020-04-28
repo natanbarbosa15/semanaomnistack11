@@ -5,7 +5,8 @@ import Index from "./pages/index";
 import Login from "./pages/login";
 import Register from "./pages/register";
 import About from "./pages/about";
-import Useterms from "./pages/useTerms";
+import UseTerms from "./pages/useTerms";
+import PrivacyTerms from "./pages/privacyTerms";
 
 const Routes = () => (
   <BrowserRouter>
@@ -14,7 +15,8 @@ const Routes = () => (
       <Route path="/login" component={Login} />
       <Route path="/register" component={Register} />
       <Route path="/about" component={About} />
-      <Route path="/useterms" component={Useterms} />
+      <Route path="/useterms" component={UseTerms} />
+      <Route path="/privacyterms" component={PrivacyTerms} />
     </Switch>
   </BrowserRouter>
 );

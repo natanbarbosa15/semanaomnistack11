@@ -54,14 +54,9 @@ export default function index() {
             </div>
             <div className="col-md ml-0">
               {" "}
-              <a
-                className="text-reset"
-                href="https://www.iubenda.com/privacy-policy/55306019/legal"
-                rel="nofollow noopener noreferrer"
-                target="_blank"
-              >
+              <Link to="/privacyterms" className="text-reset">
                 <span>Política de Privacidade</span>
-              </a>{" "}
+              </Link>{" "}
             </div>
           </div>
         </div>
