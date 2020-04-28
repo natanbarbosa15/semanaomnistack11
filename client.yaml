@@ -1,4 +1,4 @@
-# api.yaml For Back-End REST API AdonisJS
+# client.yaml For Front-End ReactJS
 
 env: standard
 runtime: nodejs12
