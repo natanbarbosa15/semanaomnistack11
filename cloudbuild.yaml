@@ -1,11 +1,11 @@
 steps:
   - name: gcr.io/cloud-builders/gsutil
+    entrypoint: bash
     args:
-      [
-        "cp",
-        "gs://be-the-hero-275300.appspot.com/secrets/frontend/.env",
-        ".env",
-      ]
+      - "-c"
+      - |
+        gsutil cp gs://be-the-hero-275300.appspot.com/secrets/frontend/.env .env
+        gsutil cp gs://be-the-hero-275300.appspot.com/secrets/frontend/google-service-account.json google-service-account.json
     timeout: "600s"
   - name: node:${_NODE_VERSION}
     entrypoint: bash
