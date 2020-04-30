@@ -1,9 +1,42 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useHistory } from "react-router-dom";
+
+import api from "../../services/api";
 
 import imgLogo from "../../assets/images/logo.svg";
 
-export default function register() {
+export default function Register() {
+  const [state, setState] = useState({
+    username: "",
+    email: "",
+    whatsapp: "",
+    city: "",
+    state: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const history = useHistory();
+
+  async function handleSignUp(e) {
+    e.preventDefault();
+
+    const postData = {
+      username: state.username,
+      email: state.email,
+      whatsapp: state.whatsapp,
+      city: state.city,
+      state: state.state,
+      password: state.password,
+    };
+
+    try {
+      await api.post("users", postData);
+      history.push("/");
+    } catch {
+      alert("Falha no cadastro, tente novamente mais tarde.");
+    }
+  }
+
   return (
     <div className="container-fluid">
       <div className="row mt-3 no-gutters">
@@ -31,10 +64,10 @@ export default function register() {
           </div>
           <div className="row">
             <div className="col-lg-8">
-              <form>
+              <form onSubmit={handleSignUp}>
                 <div className="form-row">
                   <div className="form-group col-md-6">
-                    <label for="inputUsername">Nome de usuário</label>
+                    <label htmlFor="inputUsername">Nome da ONG</label>
                     <div className="input-group mb-3 input-group-sm d-flex align-items-center">
                       <div className="input-group-prepend">
                         <div className="input-group-text bg-white icon-fa">
@@ -46,11 +79,18 @@ export default function register() {
                         className="form-control"
                         id="inputUsername"
                         placeholder="Nome de usuário"
+                        onChange={(e) =>
+                          setState({ ...state, username: e.target.value })
+                        }
+                        required
                       />
+                      <div className="invalid-feedback">
+                        Já existe uma ONG cadastrada com esse nome.
+                      </div>
                     </div>
                   </div>
                   <div className="form-group col-md-6">
-                    <label for="inputEmail">Email</label>
+                    <label htmlFor="inputEmail">Email</label>
                     <div className="input-group mb-3 input-group-sm d-flex align-items-center">
                       <div className="input-group-prepend">
                         <div className="input-group-text bg-white icon-fa">
@@ -62,13 +102,20 @@ export default function register() {
                         className="form-control"
                         id="inputEmail"
                         placeholder="email@email.com"
+                        onChange={(e) =>
+                          setState({ ...state, email: e.target.value })
+                        }
+                        required
                       />
+                      <div className="invalid-feedback">
+                        Já existe uma ONG cadastrada com esse Email.
+                      </div>
                     </div>
                   </div>
                 </div>
                 <div className="form-row">
                   <div className="form-group col-md-6">
-                    <label for="inputWhatsapp">Whatsapp</label>
+                    <label htmlFor="inputWhatsapp">Whatsapp</label>
                     <div className="input-group mb-3 input-group-sm d-flex align-items-center">
                       <div className="input-group-prepend">
                         <div className="input-group-text bg-white icon-fa">
@@ -80,11 +127,18 @@ export default function register() {
                         className="form-control"
                         id="inputWhatsapp"
                         placeholder="(41) 99999-9999"
+                        onChange={(e) =>
+                          setState({ ...state, whatsapp: e.target.value })
+                        }
+                        required
                       />
+                      <div className="invalid-feedback">
+                        Já existe uma ONG cadastrada com esse Whatsapp.
+                      </div>
                     </div>
                   </div>
                   <div className="form-group col-md-4">
-                    <label for="inputCity">Cidade</label>
+                    <label htmlFor="inputCity">Cidade</label>
                     <div className="input-group mb-3 input-group-sm d-flex align-items-center">
                       <div className="input-group-prepend">
                         <div className="input-group-text bg-white icon-fa">
@@ -92,27 +146,60 @@ export default function register() {
                         </div>
                       </div>
                       <input
-                        type="email"
+                        type="text"
                         className="form-control"
                         id="inputCity"
                         placeholder="Cidade"
+                        onChange={(e) =>
+                          setState({ ...state, city: e.target.value })
+                        }
+                        required
                       />
                     </div>
                   </div>
                   <div className="form-group col-md-2">
-                    <label for="inputState">Estado</label>
+                    <label htmlFor="inputState">Estado</label>
                     <select
                       id="inputState"
                       className="input-group form-control-sm"
+                      onChange={(e) =>
+                        setState({ ...state, state: e.target.value })
+                      }
+                      required
                     >
-                      <option selected>PR</option>
-                      <option>...</option>
+                      <option>AC</option>
+                      <option>AL</option>
+                      <option>AP</option>
+                      <option>AM</option>
+                      <option>BA</option>
+                      <option>CE</option>
+                      <option>DF</option>
+                      <option>ES</option>
+                      <option>GO</option>
+                      <option>MA</option>
+                      <option>MT</option>
+                      <option>MS</option>
+                      <option>MG</option>
+                      <option>PA</option>
+                      <option>PB</option>
+                      <option>PR</option>
+                      <option>PE</option>
+                      <option>PI</option>
+                      <option>RJ</option>
+                      <option>RN</option>
+                      <option>RS</option>
+                      <option>RO</option>
+                      <option>RR</option>
+                      <option>SC</option>
+                      <option>SP</option>
+                      <option>SE</option>
+                      <option>TO</option>
                     </select>
                   </div>
                 </div>
                 <div className="form-row">
                   <div className="form-group col-md-6">
-                    <label for="inputPassword">Senha</label>
+                    <label htmlFor="inputPassword">Senha</label>
                     <div className="input-group mb-3 input-group-sm d-flex align-items-center">
                       <div className="input-group-prepend">
                         <div className="input-group-text bg-white icon-fa">
@@ -124,11 +211,17 @@ export default function register() {
                         className="form-control"
                         id="inputPassword"
                         placeholder="Senha"
+                        onChange={(e) =>
+                          setState({ ...state, password: e.target.value })
+                        }
+                        required
                       />
                     </div>
                   </div>
                   <div className="form-group col-md-6">
-                    <label for="inputConfirmPassword">Confirmar senha</label>
+                    <label htmlFor="inputConfirmPassword">
+                      Confirmar senha
+                    </label>
                     <div className="input-group mb-3 input-group-sm d-flex align-items-center">
                       <div className="input-group-prepend">
                         <div className="input-group-text bg-white icon-fa">
@@ -140,9 +233,34 @@ export default function register() {
                         className="form-control"
                         id="inputConfirmPassword"
                         placeholder="Redigite a senha"
+                        onChange={(e) =>
+                          setState({
+                            ...state,
+                            confirmPassword: e.target.value,
+                          })
+                        }
+                        required
                       />
                     </div>
                   </div>
+                </div>
+                <div className="form-group row form-check ml-0">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    value=""
+                    id="defaultCheck1"
+                  />
+                  <label className="form-check-label" htmlFor="defaultCheck1">
+                    Aceito os{" "}
+                    <Link to="/useterms" target="_blank">
+                      Termos de Uso
+                    </Link>{" "}
+                    e a{" "}
+                    <Link to="/privacyterms" target="_blank">
+                      Política de Privacidade
+                    </Link>
+                  </label>
                 </div>
                 <div className="form-group row ml-0">
                   <button type="submit" className="btn btn-default">

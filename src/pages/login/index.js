@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import imgLogo from "../../assets/images/logo.svg";
 import imgHeroes from "../../assets/images/heroes.png";
 
-export default function login() {
+export default function Login() {
   return (
     <div className="container-fluid">
       <div className="row mt-3 no-gutters">
@@ -34,7 +34,7 @@ export default function login() {
             <div className="col-md-8">
               <form>
                 <div className="form-group">
-                  <label for="inputEmail">Email</label>
+                  <label htmlFor="inputEmail">Email</label>
                   <div className="input-group mb-3 input-group-sm d-flex align-items-center">
                     <div className="input-group-prepend">
                       <div className="input-group-text bg-white icon-fa">
@@ -51,7 +51,7 @@ export default function login() {
                   </div>
                 </div>
                 <div className="form-group">
-                  <label for="inputPassword">Senha</label>
+                  <label htmlFor="inputPassword">Senha</label>
                   <div className="input-group mb-3 input-group-sm d-flex align-items-center">
                     <div className="input-group-prepend">
                       <div className="input-group-text bg-white icon-fa">

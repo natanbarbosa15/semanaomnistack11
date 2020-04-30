@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import imgLogo from "../../assets/images/logo.svg";
 import imgHeroes from "../../assets/images/heroes.png";
 
-export default function index() {
+export default function Index() {
   return (
     <div className="container-fluid">
       <div className="row mt-3">

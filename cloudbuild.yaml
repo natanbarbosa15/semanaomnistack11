@@ -18,7 +18,7 @@ steps:
       - "NODE_ENV=${_NODE_ENV}"
     timeout: "600s"
   - name: "gcr.io/cloud-builders/gcloud"
-    args: ["app", "deploy", "client.yaml"]
+    args: ["app", "deploy", "client.yaml", "--no-promote"]
     timeout: "600s"
 substitutions:
   _NODE_VERSION: "12"

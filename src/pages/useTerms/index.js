@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import imgLogo from "../../assets/images/logo.svg";
 
-export default function useTerms() {
+export default function UseTerms() {
   return (
     <div className="container-fluid">
       <div className="row mt-3 no-gutters">

@@ -10,7 +10,7 @@ import imgReact from "../../assets/images/react.png";
 import imgReactNative from "../../assets/images/reactnative.png";
 import imgGoogleCloud from "../../assets/images/googlecloud.png";
 
-export default function about() {
+export default function About() {
   return (
     <div className="container-fluid">
       <div className="row mt-3 no-gutters">
