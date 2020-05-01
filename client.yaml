@@ -3,11 +3,12 @@
 env: standard
 runtime: nodejs12
 service: default
+entrypoint: npm start
 handlers:
   # Serve all static files
   - url: /favicon\.ico
     static_files: build/favicon.ico
-    upload: favicon.ico
+    upload: build/favicon.ico
   - url: /static
     static_dir: build/static
   - url: /.*
@@ -16,3 +17,5 @@ handlers:
     script: auto
 env_variables:
   GOOGLE_APPLICATION_CREDENTIALS: "./google-service-account.json"
+inbound_services:
+  - warmup

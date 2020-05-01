@@ -1,15 +1,15 @@
 const express = require("express");
 const favicon = require("express-favicon");
+const cors = require("cors");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const requestIp = require("request-ip");
-const ipaddr = require("ipaddr.js");
 const path = require("path");
 const port = process.env.PORT || 8080;
 const { google } = require("googleapis");
 const appengine = google.appengine("v1");
 
-async function firewallCreateBlock(clientIpv4) {
+async function firewallCreateBlock(clientIp) {
   // This method looks for the GOOGLE_APPLICATION_CREDENTIALS environment variable.
   const auth = new google.auth.GoogleAuth({
     // Scopes can be specified either as an array or as a single, space-delimited string.
@@ -26,7 +26,16 @@ async function firewallCreateBlock(clientIpv4) {
     auth: authClient,
   });
   const rules = list.data.ingressRules;
-  let nextPriority = rules[rules.length - 2].priority + 1;
+  let nextPriority = 0;
+  if (rules.length > 1) {
+    nextPriority = rules[rules.length - 2].priority + 1;
+  } else {
+    nextPriority = 1;
+  }
+
+  if (clientIp.startsWith("::ffff:")) {
+    clientIp = clientIp.replace("::ffff:", "") + "/32";
+  }
 
   // Create Firewall Rule to Block given IP
   await appengine.apps.firewall.ingressRules.create({
@@ -34,29 +43,27 @@ async function firewallCreateBlock(clientIpv4) {
     requestBody: {
       priority: nextPriority,
       action: "DENY",
-      sourceRange: clientIpv4 + "/32",
+      sourceRange: clientIp,
       description: "DDoS Block",
     },
     auth: authClient,
   });
-
-  console.log(nextPriority);
 }
 
 const app = express();
 
 // Config Rate Limiter
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  windowMs: 500, // 1 second
+  max: 5, // limit each IP to 10 requests per windowMs
   onLimitReached(req, res, options) {
-    const clientIp = ipaddr.process(requestIp.getClientIp(req));
-
-    // firewallCreateBlock(clientIp).catch(console.error);
-    console.log(clientIp.toString());
+    const clientIp = requestIp.getClientIp(req);
+    firewallCreateBlock(clientIp).catch(console.error);
   },
 });
 
+// Use CORS
+app.use(cors());
 // Use Helmet protection
 app.use(helmet());
 // Use rate limiter
@@ -67,8 +74,8 @@ app.use(favicon(__dirname + "/build/favicon.ico")); // the __dirname is the curr
 app.use(express.static(path.join(__dirname, "build")));
 
 // Routes
-app.get("/status", function (req, res) {
-  return res.send("Front-End OK!");
+app.get("/_ah/warmup", function (req, res) {
+  return res.status(200).send("Front-End OK!");
 });
 app.get(
   [
