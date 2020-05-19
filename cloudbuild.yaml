@@ -5,15 +5,15 @@ steps:
       - "-c"
       - |
         gsutil cp gs://be-the-hero-275300.appspot.com/secrets/frontend/.env .env
-        gsutil cp gs://be-the-hero-275300.appspot.com/secrets/frontend/google-service-account.json google-service-account.json
+        gsutil cp gs://be-the-hero-275300.appspot.com/secrets/frontend/.env.expressjs .env.expressjs
     timeout: "600s"
   - name: node:${_NODE_VERSION}
     entrypoint: bash
     args:
       - "-c"
       - |
-        yarn install --production
-        yarn run react-scripts build
+        yarn install
+        yarn run react-app-rewired build
     env:
       - "NODE_ENV=${_NODE_ENV}"
     timeout: "600s"
@@ -22,4 +22,4 @@ steps:
     timeout: "600s"
 substitutions:
   _NODE_VERSION: "12"
-  _NODE_ENV: "production"
+  _NODE_ENV: "development"
