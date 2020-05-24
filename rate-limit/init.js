@@ -1,7 +1,6 @@
 const requestIp = require("request-ip");
 const rateLimit = require("express-rate-limit");
 const RedisStore = require("rate-limit-redis");
-const redis = require("redis");
 const firewallApiCall = require("../appengine/firewallApi");
 
 /**
@@ -10,11 +9,7 @@ const firewallApiCall = require("../appengine/firewallApi");
  * @param {Number} windowMs Number for reset time in milliseconds
  * @param {Number} maxAttempt Number max attempts before block IP
  */
-function RateLimiter(windowMs, maxAttempt) {
-  const client = redis.createClient({
-    url: process.env.REDIS_URL,
-  });
-
+function RateLimiter(windowMs, maxAttempt, redisClient) {
   return rateLimit({
     windowMs: windowMs,
     max: maxAttempt,
@@ -30,7 +25,7 @@ function RateLimiter(windowMs, maxAttempt) {
       await firewallApiCall(clientIp).catch(console.error);
     },
     store: new RedisStore({
-      client: client,
+      client: redisClient,
     }),
     delayMs: 0, // disable delaying - full speed until the max limit is reached
   });

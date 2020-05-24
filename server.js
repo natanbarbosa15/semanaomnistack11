@@ -5,6 +5,10 @@ const cors = require("cors");
 const helmet = require("helmet");
 const path = require("path");
 const RateLimiter = require("./rate-limit/init");
+const redis = require("redis");
+const redisClient = redis.createClient({
+  url: process.env.REDIS_URL,
+});
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -15,7 +19,7 @@ function initExpressAddons() {
   // Use Helmet protection
   app.use(helmet());
   // Config Rate Limiter
-  const limiter = RateLimiter(1 * 60000, 1000);
+  const limiter = RateLimiter(1 * 60000, 1000, redisClient);
   // Use rate limiter
   app.use(limiter);
 }
@@ -57,4 +61,10 @@ app.use(function (e, req, res, next) {
   }
 });
 
-app.listen(port);
+const server = app.listen(port);
+
+// Gracefully close connection to Redis and close HTTP server on process exit.
+process.on("exit", function () {
+  redisClient.quit();
+  server.close();
+});
