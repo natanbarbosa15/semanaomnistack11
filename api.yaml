@@ -1,0 +1,7 @@
+# api.yaml For Back-End REST API AdonisJS
+
+env: standard
+runtime: nodejs12
+service: api-v1
+inbound_services:
+  - warmup
