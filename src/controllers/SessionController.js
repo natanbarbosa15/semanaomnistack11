@@ -23,6 +23,9 @@ module.exports = {
         return response.status(403).send("Forbidden");
       }
     } catch (error) {
+      if (error.code === "auth/id-token-expired") {
+        return response.status(403).send("Forbidden");
+      }
       return response.status(500).send("Internal Server Error");
     }
   },

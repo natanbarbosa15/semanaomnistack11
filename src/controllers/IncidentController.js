@@ -36,18 +36,23 @@ module.exports = {
       if (user) {
         const ong_id = user.uid;
 
-        const [id] = await connection("incidents").insert({
-          title,
-          description,
-          value,
-          ong_id,
-        });
+        const [id] = await connection("incidents")
+          .insert({
+            title,
+            description,
+            value,
+            ong_id,
+          })
+          .returning("id");
 
         return response.json({ id });
       } else {
         return response.status(403).send("Forbidden");
       }
     } catch (error) {
+      if (error.code === "auth/id-token-expired") {
+        return response.status(403).send("Forbidden");
+      }
       return response.status(500).send("Internal Server Error");
     }
   },
@@ -87,6 +92,9 @@ module.exports = {
         return response.status(403).send("Forbidden");
       }
     } catch (error) {
+      if (error.code === "auth/id-token-expired") {
+        return response.status(403).send("Forbidden");
+      }
       return response.status(500).send("Internal Server Error");
     }
   },
@@ -117,6 +125,9 @@ module.exports = {
         return response.status(403).send("Forbidden");
       }
     } catch (error) {
+      if (error.code === "auth/id-token-expired") {
+        return response.status(403).send("Forbidden");
+      }
       return response.status(500).send("Internal Server Error");
     }
   },
