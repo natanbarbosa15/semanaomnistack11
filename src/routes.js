@@ -7,6 +7,14 @@ const SessionController = require("./controllers/SessionController");
 
 const routes = express.Router();
 
+routes.get("/status", function (req, res) {
+  return res.status(200).send("OK!");
+});
+
+routes.get("/_ah/warmup", function (req, res) {
+  return res.status(200).send("OK!");
+});
+
 routes.post("/sessions", SessionController.create);
 
 routes.get("/ongs", OngController.index);
