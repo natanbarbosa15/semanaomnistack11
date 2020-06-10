@@ -8,5 +8,6 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/v1", routes);
 app.use(errors());
+app.disable("x-powered-by");
 
 module.exports = app;
