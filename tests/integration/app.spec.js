@@ -1,119 +1,175 @@
-const request = require('supertest');
-const app = require('../../src/app');
-const connection = require('../../src/database/connection');
+const request = require("supertest");
+const app = require("../../src/app");
+const connection = require("../../src/database/connection");
+const basePath = "/api/v1";
 
+describe("ONG, Session, Profile and Incidents", () => {
+  beforeAll(async () => {
+    await connection.migrate.rollback();
+    await connection.migrate.latest();
+  });
 
-describe('ONG, Session and Incident', () => {
-    beforeAll(async () => {
-        await connection.migrate.rollback();
-        await connection.migrate.latest();
+  afterAll(async () => {
+    await connection.destroy();
+  });
+
+  it("should be able to create a new ONG", async () => {
+    const response = await request(app).post(`${basePath}/ongs`).send({
+      name: "teste",
+      email: "teste@teste.com",
+      password: "teste12345",
+      whatsapp: "+5541999999999",
+      cep: "80000-000",
+      city: "Curitiba",
+      state: "PR",
+      street: "Rua Centro",
+      streetNumber: "1",
     });
+    expect(response.statusCode).toBe(200);
+  });
 
-    afterAll(async () => {
-        await connection.destroy();
+  it("should be able to list all ONGs", async () => {
+    const ongTest = await connection("ongs").select("*").first();
+
+    const response = await request(app).get(`${basePath}/ongs`);
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toEqual([
+      {
+        id: String(ongTest.id),
+        name: "teste",
+        email: "teste@teste.com",
+        whatsapp: "+5541999999999",
+        cep: "80000-000",
+        city: "Curitiba",
+        state: "PR",
+        street: "Rua Centro",
+        streetNumber: "1",
+      },
+    ]);
+  });
+
+  it("should be able to create a Login session", async () => {
+    const ongTest = await connection("ongs").select("*").first();
+    const token = new Buffer(
+      JSON.stringify({ id: String(ongTest.id) })
+    ).toString("base64");
+
+    const response = await request(app)
+      .post(`${basePath}/sessions`)
+      .set({ "x-endpoint-api-userinfo": token });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toHaveProperty("name");
+  });
+
+  it("should be able to create an Incident", async () => {
+    const ongTest = await connection("ongs").select("*").first();
+    const token = new Buffer(
+      JSON.stringify({ id: String(ongTest.id) })
+    ).toString("base64");
+
+    const response = await request(app)
+      .post(`${basePath}/incidents`)
+      .set({ "x-endpoint-api-userinfo": token })
+      .send({
+        title: "Teste",
+        description: "Teste",
+        value: 1200.05,
+      });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toHaveProperty("id");
+  });
+
+  it("should be able to list all Incidents", async () => {
+    const ongTest = await connection("ongs").select("*").first();
+    const incidentTest = await connection("incidents").select("*").first();
+
+    const response = await request(app).get(`${basePath}/incidents`);
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toEqual([
+      {
+        id: Number(incidentTest.id),
+        title: "Teste",
+        description: "Teste",
+        value: 1200.05,
+        ong_id: String(ongTest.id),
+        name: "teste",
+        email: "teste@teste.com",
+        whatsapp: "+5541999999999",
+        cep: "80000-000",
+        city: "Curitiba",
+        state: "PR",
+        street: "Rua Centro",
+        streetNumber: "1",
+      },
+    ]);
+  });
+
+  it("should be able to read a Incident", async () => {
+    const ongTest = await connection("ongs").select("*").first();
+    const incidentTest = await connection("incidents").select("*").first();
+    const token = new Buffer(
+      JSON.stringify({ id: String(ongTest.id) })
+    ).toString("base64");
+
+    const response = await request(app)
+      .get(`${basePath}/incidents/${ongTest.id}`)
+      .set({ "x-endpoint-api-userinfo": token });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toEqual({
+      id: Number(incidentTest.id),
+      title: "Teste",
+      description: "Teste",
+      value: 1200.05,
+      ong_id: String(ongTest.id),
+      name: "teste",
+      email: "teste@teste.com",
+      whatsapp: "+5541999999999",
+      cep: "80000-000",
+      city: "Curitiba",
+      state: "PR",
+      street: "Rua Centro",
+      streetNumber: "1",
     });
+  });
 
-    it('should be able to create a new ONG', async () => {
-        const response = await request(app)
-            .post('/ongs')
-            .send({
-                name: "APADTeste",
-                email: "contato@contato.com.br",
-                whatsapp: "4700000000",
-                city: "Rio do Sul",
-                state: "SC"
-            });
+  it("should be able to list profile details for ONG", async () => {
+    const ongTest = await connection("ongs").select("*").first();
+    const incidentTest = await connection("incidents").select("*").first();
+    const token = new Buffer(
+      JSON.stringify({ id: String(ongTest.id) })
+    ).toString("base64");
 
-        expect(response.body).toHaveProperty('id');
-        expect(response.body.id).toHaveLength(8);
-    });
+    const response = await request(app)
+      .get(`${basePath}/profile`)
+      .set({ "x-endpoint-api-userinfo": token });
 
-    it('should be able to list created ONG', async () => {
-        const ongTest = await connection('ongs').select('*').first();
-        
-        const response = await request(app)
-            .get('/ongs');
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toEqual([
+      {
+        id: Number(incidentTest.id),
+        title: "Teste",
+        description: "Teste",
+        value: 1200.05,
+        ong_id: String(ongTest.id),
+      },
+    ]);
+  });
 
-        expect(response.body).toEqual([{
-            id: ongTest.id,
-            name: "APADTeste",
-            email: "contato@contato.com.br",
-            whatsapp: "4700000000",
-            city: "Rio do Sul",
-            state: "SC"
-        }]);
-    });
+  it("should be able to delete an Incident", async () => {
+    const ongTest = await connection("ongs").select("*").first();
+    const token = new Buffer(
+      JSON.stringify({ id: String(ongTest.id) })
+    ).toString("base64");
 
-    it('should be able to create a Login session', async () => {
-        const ongTest = await connection('ongs').select('*').first();
-        
-        const response = await request(app)
-            .post('/sessions')
-            .send({
-                id: ongTest.id
-            });
-            
-        expect(response.body).toHaveProperty('name');
-    });
+    const response = await request(app)
+      .delete(`${basePath}/incidents/${ongTest.id}`)
+      .set({ "x-endpoint-api-userinfo": token });
 
-    it('should be able to create an Incident', async () => {
-        const ongTest = await connection('ongs').select('*').first();
-        
-        const response = await request(app)
-            .post('/incidents')
-            .set('Authorization', ongTest.id)
-            .send({
-                title: "Teste",
-                description: "Teste",
-                value: 1200
-            });
-
-        expect(response.body).toHaveProperty('id');
-    });
-
-    it('should be able to list created Incident', async () => {
-        const ongTest = await connection('ongs').select('*').first();
-        
-        const response = await request(app)
-            .get('/incidents');
-
-        expect(response.body).toEqual([{
-            id: 1,
-            title: "Teste",
-            description: "Teste",
-            value: 1200,
-            ong_id: ongTest.id,
-            name: "APADTeste",
-            email: "contato@contato.com.br",
-            whatsapp: "4700000000",
-            city: "Rio do Sul",
-            state: "SC"
-        }]);
-    });
-
-    it('should be able to list created Incident in ONG profile', async () => {
-        const ongTest = await connection('ongs').select('*').first();
-        
-        const response = await request(app)
-            .get('/profile')
-            .set('Authorization', ongTest.id);
-
-        expect(response.body).toEqual([{
-            id: 1,
-            title: "Teste",
-            description: "Teste",
-            value: 1200,
-            ong_id: ongTest.id
-        }]);
-    });
-
-    it('should be able to delete an Incident', async () => {
-        const ongTest = await connection('ongs').select('*').first();
-        
-        const response = await request(app)
-            .delete('/incidents/1')
-            .set('Authorization', ongTest.id);
-        
-        expect(response.statusCode).toBe(204);
-    });
+    expect(response.statusCode).toBe(204);
+  });
 });
