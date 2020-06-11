@@ -17,7 +17,7 @@ module.exports = {
         return response.status(403).send("Forbidden");
       }
 
-      return response.json(ong);
+      return response.json({ name: ong.name });
     } catch (error) {
       return response.status(500).send("Internal Server Error");
     }
