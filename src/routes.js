@@ -57,15 +57,7 @@ routes.put(
   OngController.update
 );
 
-routes.delete(
-  "/ongs/:id",
-  celebrate({
-    [Segments.PARAMS]: Joi.object().keys({
-      id: Joi.number().required(),
-    }),
-  }),
-  OngController.delete
-);
+routes.delete("/ongs", OngController.delete);
 
 routes.get("/profile", ProfileController.index);
 

@@ -259,7 +259,7 @@ describe("ONG, Session, Profile and Incidents", () => {
     ).toString("base64");
 
     const response = await request(app)
-      .delete(`${basePath}/ongs/${ongTest.id}`)
+      .delete(`${basePath}/ongs`)
       .set({ "x-endpoint-api-userinfo": token });
 
     expect(response.statusCode).toBe(204);
