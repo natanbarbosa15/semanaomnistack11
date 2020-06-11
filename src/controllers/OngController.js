@@ -128,6 +128,7 @@ module.exports = {
 
       await firebaseAdmin.auth().deleteUser(user.id);
       await connection("ongs").delete().where("id", user.id);
+      await connection("incidents").delete().where("ong_id", user.id);
 
       return response.status(204).send();
     } catch (error) {
