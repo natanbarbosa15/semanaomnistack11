@@ -36,7 +36,14 @@ module.exports = {
       if (!user) {
         return response.status(403).send("Forbidden");
       }
-      const ong_id = String(user.id);
+      const ong = await connection("ongs")
+        .select("*")
+        .where("id", user.id)
+        .first();
+      if (!ong) {
+        return response.status(403).send("Forbidden");
+      }
+      const ong_id = String(ong.id);
 
       const [id] = await connection("incidents")
         .insert({
@@ -60,7 +67,14 @@ module.exports = {
       if (!user) {
         return response.status(403).send("Forbidden");
       }
-      const ong_id = String(user.id);
+      const ong = await connection("ongs")
+        .select("*")
+        .where("id", user.id)
+        .first();
+      if (!ong) {
+        return response.status(403).send("Forbidden");
+      }
+      const ong_id = String(ong.id);
 
       const incident = await connection("incidents")
         .select([
@@ -103,8 +117,14 @@ module.exports = {
       if (!user) {
         return response.status(403).send("Forbidden");
       }
-
-      const ong_id = String(user.id);
+      const ong = await connection("ongs")
+        .select("*")
+        .where("id", user.id)
+        .first();
+      if (!ong) {
+        return response.status(403).send("Forbidden");
+      }
+      const ong_id = String(ong.id);
 
       const incident = await connection("incidents")
         .select("ong_id")
@@ -136,7 +156,14 @@ module.exports = {
       if (!user) {
         return response.status(403).send("Forbidden");
       }
-      const ong_id = String(user.id);
+      const ong = await connection("ongs")
+        .select("*")
+        .where("id", user.id)
+        .first();
+      if (!ong) {
+        return response.status(403).send("Forbidden");
+      }
+      const ong_id = String(ong.id);
 
       const incident = await connection("incidents")
         .select("ong_id")

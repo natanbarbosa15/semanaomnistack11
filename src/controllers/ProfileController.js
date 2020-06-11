@@ -8,7 +8,14 @@ module.exports = {
       if (!user) {
         return response.status(403).send("Forbidden");
       }
-      const ong_id = String(user.id);
+      const ong = await connection("ongs")
+        .select("*")
+        .where("id", user.id)
+        .first();
+      if (!ong) {
+        return response.status(403).send("Forbidden");
+      }
+      const ong_id = String(ong.id);
 
       const incidents = await connection("incidents")
         .select("*")

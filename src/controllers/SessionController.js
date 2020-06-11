@@ -9,13 +9,10 @@ module.exports = {
         return response.status(403).send("Forbidden");
       }
 
-      const ong_id = String(user.id);
-
       const ong = await connection("ongs")
-        .select("name")
-        .where("id", ong_id)
+        .select("*")
+        .where("id", user.id)
         .first();
-
       if (!ong) {
         return response.status(403).send("Forbidden");
       }

@@ -78,14 +78,19 @@ module.exports = {
       if (!user) {
         return response.status(403).send("Forbidden");
       }
+      const ong = await connection("ongs")
+        .select("*")
+        .where("id", user.id)
+        .first();
+      if (!ong) {
+        return response.status(403).send("Forbidden");
+      }
 
-      await firebaseAdmin
-        .auth()
-        .updateUser(user.id, {
-          email,
-          password,
-          displayName: `${name} ${email}`,
-        });
+      await firebaseAdmin.auth().updateUser(user.id, {
+        email,
+        password,
+        displayName: `${name} ${email}`,
+      });
 
       await connection("ongs")
         .update({
@@ -110,12 +115,21 @@ module.exports = {
   async delete(request, response) {
     try {
       const user = getCurrentUser(request);
-
-      if (user) {
-        await firebaseAdmin.auth().deleteUser(user.id);
-        await connection("ongs").delete().where("id", user.id);
-        return response.status(204).send();
+      if (!user) {
+        return response.status(403).send("Forbidden");
       }
+      const ong = await connection("ongs")
+        .select("*")
+        .where("id", user.id)
+        .first();
+      if (!ong) {
+        return response.status(403).send("Forbidden");
+      }
+
+      await firebaseAdmin.auth().deleteUser(user.id);
+      await connection("ongs").delete().where("id", user.id);
+
+      return response.status(204).send();
     } catch (error) {
       return response.status(500).send("Internal Server Error");
     }
