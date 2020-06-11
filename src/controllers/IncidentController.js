@@ -33,6 +33,9 @@ module.exports = {
     try {
       const { title, description, value } = request.body;
       const user = getCurrentUser(request);
+      if (!user) {
+        return response.status(403).send("Forbidden");
+      }
       const ong_id = String(user.id);
 
       const [id] = await connection("incidents")
@@ -54,6 +57,9 @@ module.exports = {
     try {
       const { id } = request.params;
       const user = getCurrentUser(request);
+      if (!user) {
+        return response.status(403).send("Forbidden");
+      }
       const ong_id = String(user.id);
 
       const incident = await connection("incidents")
@@ -73,6 +79,10 @@ module.exports = {
         .where("incidents.id", id)
         .first();
 
+      if (!incident) {
+        return response.status(404).json({ message: "Not found." });
+      }
+
       if (incident.ong_id !== ong_id) {
         return response
           .status(401)
@@ -85,10 +95,15 @@ module.exports = {
     }
   },
 
-  async delete(request, response) {
+  async update(request, response) {
     try {
+      const { title, description, value } = request.body;
       const { id } = request.params;
       const user = getCurrentUser(request);
+      if (!user) {
+        return response.status(403).send("Forbidden");
+      }
+
       const ong_id = String(user.id);
 
       const incident = await connection("incidents")
@@ -100,7 +115,43 @@ module.exports = {
         return response.status(401).json({ error: "Operation not permitted." });
       }
 
-      await connection("incidents").where("id", id).delete();
+      await connection("incidents")
+        .update({
+          title,
+          description,
+          value,
+        })
+        .where("id", id);
+
+      return response.status(200).send();
+    } catch (error) {
+      return response.status(500).send("Internal Server Error");
+    }
+  },
+
+  async delete(request, response) {
+    try {
+      const { id } = request.params;
+      const user = getCurrentUser(request);
+      if (!user) {
+        return response.status(403).send("Forbidden");
+      }
+      const ong_id = String(user.id);
+
+      const incident = await connection("incidents")
+        .select("ong_id")
+        .where("id", id)
+        .first();
+
+      if (!incident) {
+        return response.status(404).json({ message: "Not found." });
+      }
+
+      if (incident.ong_id !== ong_id) {
+        return response.status(401).json({ error: "Operation not permitted." });
+      }
+
+      await connection("incidents").delete().where("id", id);
 
       return response.status(204).send();
     } catch (error) {

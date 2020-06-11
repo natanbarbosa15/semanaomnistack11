@@ -1,14 +1,15 @@
 const firebaseAdmin = require("../utils/firebaseAdmin");
 const connection = require("../database/connection");
+const { getCurrentUser } = require("../utils/auth");
 
 module.exports = {
-  async index(req, res) {
+  async index(request, response) {
     const ongs = await connection("ongs").select("*");
 
-    return res.json(ongs);
+    return response.json(ongs);
   },
 
-  async create(req, res) {
+  async create(request, response) {
     try {
       const {
         name,
@@ -21,7 +22,7 @@ module.exports = {
         neighborhood,
         street,
         streetNumber,
-      } = req.body;
+      } = request.body;
 
       const user = await firebaseAdmin.auth().createUser({
         email,
@@ -46,15 +47,77 @@ module.exports = {
           streetNumber,
         });
 
-        return res.status(200).send();
+        return response.status(200).send();
       }
     } catch (error) {
       if (error.errorInfo.code === "auth/email-already-exists") {
-        return res
+        return response
           .status(400)
           .send({ message: "O Email fornecido já está cadastrado." });
       }
-      return res.status(500).send("Internal Server Error");
+      return response.status(500).send("Internal Server Error");
+    }
+  },
+
+  async update(request, response) {
+    try {
+      const {
+        name,
+        email,
+        password,
+        whatsapp,
+        cep,
+        city,
+        state,
+        neighborhood,
+        street,
+        streetNumber,
+      } = request.body;
+
+      const user = getCurrentUser(request);
+      if (!user) {
+        return response.status(403).send("Forbidden");
+      }
+
+      await firebaseAdmin
+        .auth()
+        .updateUser(user.id, {
+          email,
+          password,
+          displayName: `${name} ${email}`,
+        });
+
+      await connection("ongs")
+        .update({
+          name,
+          email,
+          whatsapp,
+          cep,
+          city,
+          state,
+          neighborhood,
+          street,
+          streetNumber,
+        })
+        .where("id", user.id);
+
+      return response.status(200).send();
+    } catch (error) {
+      return response.status(500).send("Internal Server Error");
+    }
+  },
+
+  async delete(request, response) {
+    try {
+      const user = getCurrentUser(request);
+
+      if (user) {
+        await firebaseAdmin.auth().deleteUser(user.id);
+        await connection("ongs").delete().where("id", user.id);
+        return response.status(204).send();
+      }
+    } catch (error) {
+      return response.status(500).send("Internal Server Error");
     }
   },
 };

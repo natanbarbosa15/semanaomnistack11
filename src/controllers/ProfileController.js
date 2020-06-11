@@ -5,6 +5,9 @@ module.exports = {
   async index(request, response) {
     try {
       const user = getCurrentUser(request);
+      if (!user) {
+        return response.status(403).send("Forbidden");
+      }
       const ong_id = String(user.id);
 
       const incidents = await connection("incidents")

@@ -1,5 +1,9 @@
 const firebase = jest.genMockFromModule("firebase-admin");
 
+const deleteUser = jest.fn();
+
+const updateUser = jest.fn();
+
 const createUser = jest.fn(
   ({ email, password, emailVerified, displayName }) => {
     return Promise.resolve({
@@ -17,6 +21,8 @@ firebase.initializeApp = () => {
     auth: () => {
       return {
         createUser,
+        updateUser,
+        deleteUser,
       };
     },
   };

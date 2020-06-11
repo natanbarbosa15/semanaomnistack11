@@ -38,6 +38,35 @@ routes.post(
   OngController.create
 );
 
+routes.put(
+  "/ongs",
+  celebrate({
+    [Segments.BODY]: Joi.object().keys({
+      name: Joi.string().required(),
+      email: Joi.string().required().email(),
+      password: Joi.string().required(),
+      whatsapp: Joi.string().required().min(13).max(14),
+      cep: Joi.string().required().min(9),
+      city: Joi.string().required(),
+      state: Joi.string().required().length(2),
+      neighborhood: Joi.string().required(),
+      street: Joi.string().required(),
+      streetNumber: Joi.string().required(),
+    }),
+  }),
+  OngController.update
+);
+
+routes.delete(
+  "/ongs/:id",
+  celebrate({
+    [Segments.PARAMS]: Joi.object().keys({
+      id: Joi.number().required(),
+    }),
+  }),
+  OngController.delete
+);
+
 routes.get("/profile", ProfileController.index);
 
 routes.get(
@@ -70,6 +99,21 @@ routes.get(
     }),
   }),
   IncidentController.read
+);
+
+routes.put(
+  "/incidents/:id",
+  celebrate({
+    [Segments.PARAMS]: Joi.object().keys({
+      id: Joi.number().required(),
+    }),
+    [Segments.BODY]: Joi.object().keys({
+      title: Joi.string().required(),
+      description: Joi.string().required(),
+      value: Joi.number().required(),
+    }),
+  }),
+  IncidentController.update
 );
 
 routes.delete(
