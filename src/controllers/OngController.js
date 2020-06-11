@@ -18,6 +18,7 @@ module.exports = {
         cep,
         city,
         state,
+        neighborhood,
         street,
         streetNumber,
       } = req.body;
@@ -40,6 +41,7 @@ module.exports = {
           cep,
           city,
           state,
+          neighborhood,
           street,
           streetNumber,
         });

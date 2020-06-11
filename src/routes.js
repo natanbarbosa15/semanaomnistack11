@@ -30,6 +30,7 @@ routes.post(
       cep: Joi.string().required().min(9),
       city: Joi.string().required(),
       state: Joi.string().required().length(2),
+      neighborhood: Joi.string().required(),
       street: Joi.string().required(),
       streetNumber: Joi.string().required(),
     }),

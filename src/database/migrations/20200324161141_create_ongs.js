@@ -7,6 +7,7 @@ exports.up = function (knex) {
     table.string("cep", 9).notNullable();
     table.string("city", 64).notNullable();
     table.string("state", 2).notNullable();
+    table.string("neighborhood", 254).notNullable();
     table.string("street", 254).notNullable();
     table.string("streetNumber", 64).notNullable();
   });

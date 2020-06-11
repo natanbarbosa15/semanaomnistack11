@@ -1,4 +1,5 @@
 const connection = require("../database/connection");
+const { getCurrentUser } = require("../utils/auth");
 
 module.exports = {
   async index(request, response) {
@@ -15,6 +16,7 @@ module.exports = {
         "ongs.cep",
         "ongs.city",
         "ongs.state",
+        "ongs.neighborhood",
         "ongs.street",
         "ongs.streetNumber",
       ])
@@ -30,9 +32,8 @@ module.exports = {
   async create(request, response) {
     try {
       const { title, description, value } = request.body;
-      const encodedHeader = request.header("x-endpoint-api-userinfo");
-      const decodedHeader = JSON.parse(Buffer.from(encodedHeader, "base64"));
-      const ong_id = String(decodedHeader.id);
+      const user = getCurrentUser(request);
+      const ong_id = String(user.id);
 
       const [id] = await connection("incidents")
         .insert({
@@ -52,9 +53,8 @@ module.exports = {
   async read(request, response) {
     try {
       const { id } = request.params;
-      const encodedHeader = request.header("x-endpoint-api-userinfo");
-      const decodedHeader = JSON.parse(Buffer.from(encodedHeader, "base64"));
-      const ong_id = String(decodedHeader.id);
+      const user = getCurrentUser(request);
+      const ong_id = String(user.id);
 
       const incident = await connection("incidents")
         .select([
@@ -65,6 +65,7 @@ module.exports = {
           "ongs.cep",
           "ongs.city",
           "ongs.state",
+          "ongs.neighborhood",
           "ongs.street",
           "ongs.streetNumber",
         ])
@@ -87,9 +88,8 @@ module.exports = {
   async delete(request, response) {
     try {
       const { id } = request.params;
-      const encodedHeader = request.header("x-endpoint-api-userinfo");
-      const decodedHeader = JSON.parse(Buffer.from(encodedHeader, "base64"));
-      const ong_id = String(decodedHeader.id);
+      const user = getCurrentUser(request);
+      const ong_id = String(user.id);
 
       const incident = await connection("incidents")
         .select("ong_id")

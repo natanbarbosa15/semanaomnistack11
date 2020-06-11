@@ -22,6 +22,7 @@ describe("ONG, Session, Profile and Incidents", () => {
       cep: "80000-000",
       city: "Curitiba",
       state: "PR",
+      neighborhood: "Centro",
       street: "Rua Centro",
       streetNumber: "1",
     });
@@ -43,6 +44,7 @@ describe("ONG, Session, Profile and Incidents", () => {
         cep: "80000-000",
         city: "Curitiba",
         state: "PR",
+        neighborhood: "Centro",
         street: "Rua Centro",
         streetNumber: "1",
       },
@@ -51,8 +53,9 @@ describe("ONG, Session, Profile and Incidents", () => {
 
   it("should be able to create a Login session", async () => {
     const ongTest = await connection("ongs").select("*").first();
-    const token = new Buffer(
-      JSON.stringify({ id: String(ongTest.id) })
+    const token = Buffer.from(
+      JSON.stringify({ id: String(ongTest.id) }),
+      "binary"
     ).toString("base64");
 
     const response = await request(app)
@@ -65,8 +68,9 @@ describe("ONG, Session, Profile and Incidents", () => {
 
   it("should be able to create an Incident", async () => {
     const ongTest = await connection("ongs").select("*").first();
-    const token = new Buffer(
-      JSON.stringify({ id: String(ongTest.id) })
+    const token = Buffer.from(
+      JSON.stringify({ id: String(ongTest.id) }),
+      "binary"
     ).toString("base64");
 
     const response = await request(app)
@@ -102,6 +106,7 @@ describe("ONG, Session, Profile and Incidents", () => {
         cep: "80000-000",
         city: "Curitiba",
         state: "PR",
+        neighborhood: "Centro",
         street: "Rua Centro",
         streetNumber: "1",
       },
@@ -111,8 +116,9 @@ describe("ONG, Session, Profile and Incidents", () => {
   it("should be able to read a Incident", async () => {
     const ongTest = await connection("ongs").select("*").first();
     const incidentTest = await connection("incidents").select("*").first();
-    const token = new Buffer(
-      JSON.stringify({ id: String(ongTest.id) })
+    const token = Buffer.from(
+      JSON.stringify({ id: String(ongTest.id) }),
+      "binary"
     ).toString("base64");
 
     const response = await request(app)
@@ -132,6 +138,7 @@ describe("ONG, Session, Profile and Incidents", () => {
       cep: "80000-000",
       city: "Curitiba",
       state: "PR",
+      neighborhood: "Centro",
       street: "Rua Centro",
       streetNumber: "1",
     });
@@ -140,8 +147,9 @@ describe("ONG, Session, Profile and Incidents", () => {
   it("should be able to list profile details for ONG", async () => {
     const ongTest = await connection("ongs").select("*").first();
     const incidentTest = await connection("incidents").select("*").first();
-    const token = new Buffer(
-      JSON.stringify({ id: String(ongTest.id) })
+    const token = Buffer.from(
+      JSON.stringify({ id: String(ongTest.id) }),
+      "binary"
     ).toString("base64");
 
     const response = await request(app)
@@ -162,8 +170,9 @@ describe("ONG, Session, Profile and Incidents", () => {
 
   it("should be able to delete an Incident", async () => {
     const ongTest = await connection("ongs").select("*").first();
-    const token = new Buffer(
-      JSON.stringify({ id: String(ongTest.id) })
+    const token = Buffer.from(
+      JSON.stringify({ id: String(ongTest.id) }),
+      "binary"
     ).toString("base64");
 
     const response = await request(app)

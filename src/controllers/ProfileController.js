@@ -1,11 +1,11 @@
 const connection = require("../database/connection");
+const { getCurrentUser } = require("../utils/auth");
 
 module.exports = {
   async index(request, response) {
     try {
-      const encodedHeader = request.header("x-endpoint-api-userinfo");
-      const decodedHeader = JSON.parse(Buffer.from(encodedHeader, "base64"));
-      const ong_id = String(decodedHeader.id);
+      const user = getCurrentUser(request);
+      const ong_id = String(user.id);
 
       const incidents = await connection("incidents")
         .select("*")
