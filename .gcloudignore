@@ -110,3 +110,16 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# GitHub
+.github/
+.git/
+
+# Tests
+tests/
+__mocks__/
+jest.config.js
+
+# Google
+app.yaml
+dispatch.yaml
