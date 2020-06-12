@@ -42,3 +42,30 @@ jobs:
 
       - name: Run tests
         run: yarn test
+  deploy:
+    needs: [test]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          version: "290.0.1"
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      - name: Download required files
+        run: |
+          gsutil cp gs://be-the-hero-275300.appspot.com/secrets/backend/.env .env
+          gsutil cp gs://be-the-hero-275300.appspot.com/secrets/database/ssl/client/root.crt ./ssl_cert/postgres/root.crt
+          gsutil cp gs://be-the-hero-275300.appspot.com/secrets/database/ssl/client/client.crt ./ssl_cert/postgres/client.crt
+          gsutil cp gs://be-the-hero-275300.appspot.com/secrets/database/ssl/client/client.key ./ssl_cert/postgres/client.key
+
+      - name: Deploy to App Engine
+        id: Deploy
+        uses: GoogleCloudPlatform/github-actions/appengine-deploy@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          promote: false
