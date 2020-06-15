@@ -32,7 +32,7 @@ module.exports = {
   async create(request, response) {
     try {
       const { title, description, value } = request.body;
-      const user = getCurrentUser(request);
+      const user = await getCurrentUser(request);
       if (!user) {
         return response.status(403).send("Forbidden");
       }
@@ -56,6 +56,7 @@ module.exports = {
 
       return response.json({ id });
     } catch (error) {
+      console.error(error);
       return response.status(500).send("Internal Server Error");
     }
   },
@@ -63,7 +64,7 @@ module.exports = {
   async read(request, response) {
     try {
       const { id } = request.params;
-      const user = getCurrentUser(request);
+      const user = await getCurrentUser(request);
       if (!user) {
         return response.status(403).send("Forbidden");
       }
@@ -105,6 +106,7 @@ module.exports = {
 
       return response.json(incident);
     } catch (error) {
+      console.error(error);
       return response.status(500).send("Internal Server Error");
     }
   },
@@ -113,7 +115,7 @@ module.exports = {
     try {
       const { title, description, value } = request.body;
       const { id } = request.params;
-      const user = getCurrentUser(request);
+      const user = await getCurrentUser(request);
       if (!user) {
         return response.status(403).send("Forbidden");
       }
@@ -145,6 +147,7 @@ module.exports = {
 
       return response.status(200).send();
     } catch (error) {
+      console.error(error);
       return response.status(500).send("Internal Server Error");
     }
   },
@@ -152,7 +155,7 @@ module.exports = {
   async delete(request, response) {
     try {
       const { id } = request.params;
-      const user = getCurrentUser(request);
+      const user = await getCurrentUser(request);
       if (!user) {
         return response.status(403).send("Forbidden");
       }
@@ -182,6 +185,7 @@ module.exports = {
 
       return response.status(204).send();
     } catch (error) {
+      console.error(error);
       return response.status(500).send("Internal Server Error");
     }
   },

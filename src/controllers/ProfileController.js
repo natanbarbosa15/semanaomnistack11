@@ -4,7 +4,7 @@ const { getCurrentUser } = require("../utils/auth");
 module.exports = {
   async index(request, response) {
     try {
-      const user = getCurrentUser(request);
+      const user = await getCurrentUser(request);
       if (!user) {
         return response.status(403).send("Forbidden");
       }
@@ -23,6 +23,7 @@ module.exports = {
 
       return response.json(incidents);
     } catch (error) {
+      console.error(error);
       return response.status(500).send("Internal Server Error");
     }
   },

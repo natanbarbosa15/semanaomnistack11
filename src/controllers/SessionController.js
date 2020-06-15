@@ -4,11 +4,10 @@ const { getCurrentUser } = require("../utils/auth");
 module.exports = {
   async create(request, response) {
     try {
-      const user = getCurrentUser(request);
+      const user = await getCurrentUser(request);
       if (!user) {
         return response.status(403).send("Forbidden");
       }
-
       const ong = await connection("ongs")
         .select("*")
         .where("id", user.id)
@@ -19,6 +18,7 @@ module.exports = {
 
       return response.json({ name: ong.name });
     } catch (error) {
+      console.error(error);
       return response.status(500).send("Internal Server Error");
     }
   },
