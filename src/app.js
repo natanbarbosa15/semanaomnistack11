@@ -4,7 +4,8 @@ const { errors } = require("celebrate");
 const routes = require("./routes");
 const app = express();
 
-app.use(cors());
+app.options("*", cors({ origin: "*" }));
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 app.use("/api/v1", routes);
 app.use(errors());
