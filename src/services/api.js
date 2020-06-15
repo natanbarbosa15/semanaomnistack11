@@ -7,8 +7,14 @@ const api = axios.create({
 
 api.interceptors.request.use(async (config) => {
   const token = getToken();
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  if (process.env.NODE_ENV === "production") {
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+  } else {
+    if (token) {
+      config.headers["x-endpoint-api-userinfo"] = `${token}`;
+    }
   }
   return config;
 });

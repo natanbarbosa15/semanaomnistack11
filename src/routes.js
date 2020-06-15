@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
-import { isAuthenticated } from "./services/auth";
+import AuthContext from "./services/session";
 
 import Index from "./pages/index";
 import Login from "./pages/login";
@@ -14,16 +14,20 @@ import NewIncident from "./pages/newIncident";
 import NotFound from "./pages/notFound";
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
-  <Route
-    {...rest}
-    render={(props) =>
-      isAuthenticated() ? (
-        <Component {...props} />
-      ) : (
-        <Redirect to={{ pathname: "/", state: { from: props.location } }} />
-      )
-    }
-  />
+  <AuthContext.Consumer>
+    {({ signed }) => (
+      <Route
+        {...rest}
+        render={(props) =>
+          signed ? (
+            <Component {...props} />
+          ) : (
+            <Redirect to={{ pathname: "/", state: { from: props.location } }} />
+          )
+        }
+      />
+    )}
+  </AuthContext.Consumer>
 );
 
 const Routes = () => (
@@ -36,7 +40,7 @@ const Routes = () => (
       <Route path="/useterms" component={UseTerms} />
       <Route path="/privacyterms" component={PrivacyTerms} />
       <PrivateRoute path="/app/profile" component={Profile} />
-      <PrivateRoute path="/app/profile/newincident" component={NewIncident} />
+      <PrivateRoute path="/app/newincident" component={NewIncident} />
       <Route component={NotFound} />
     </Switch>
   </BrowserRouter>

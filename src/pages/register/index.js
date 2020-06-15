@@ -1,38 +1,141 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link, useHistory } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import cep from "cep-promise";
+import * as yup from "yup";
+
+import Input from "../../components/forms/input";
+import InputMask from "../../components/forms/inputMask";
 
 import api from "../../services/api";
 
 import imgLogo from "../../assets/images/logo.svg";
 
+yup.setLocale({
+  mixed: {
+    required: "Preencha o campo",
+  },
+  string: {
+    min: "É necessário ter ${min} caracteres",
+  },
+});
+
+const validationSchema = yup.object().shape({
+  name: yup.string().required(),
+  email: yup.string().required(),
+  whatsapp: yup.string().required().min(14),
+  cep: yup.string().required().min(9),
+  state: yup.string().required(),
+  city: yup.string().required(),
+  neighborhood: yup.string().required(),
+  street: yup.string().required(),
+  streetNumber: yup.string().required(),
+  password: yup.string().required().min(6),
+  confirmPassword: yup
+    .string()
+    .required()
+    .oneOf([yup.ref("password"), null], "A senhas digitada não é igual"),
+  termos: yup
+    .boolean()
+    .required()
+    .oneOf([true], "É necessário aceitar os termos"),
+});
+
 export default function Register() {
-  const [state, setState] = useState({
-    username: "",
-    email: "",
-    whatsapp: "",
-    city: "",
-    state: "",
-    password: "",
-    confirmPassword: "",
+  const {
+    register,
+    control,
+    handleSubmit,
+    errors,
+    setValue,
+    getValues,
+  } = useForm({
+    mode: "onBlur",
+    validationSchema,
+    defaultValues: {
+      name: "",
+      email: "",
+      whatsapp: "",
+      cep: "",
+      state: "",
+      city: "",
+      neighborhood: "",
+      street: "",
+      streetNumber: "",
+      password: "",
+      confirmPassword: "",
+      termos: false,
+    },
   });
+
   const history = useHistory();
 
-  async function handleSignUp(e) {
-    e.preventDefault();
+  function whatsappMask(value) {
+    let numbers = value.match(/\d/g);
+    let numberLength = 0;
+    if (numbers) {
+      numberLength = numbers.join("").length;
+    }
 
-    const postData = {
-      username: state.username,
-      email: state.email,
-      whatsapp: state.whatsapp,
-      city: state.city,
-      state: state.state,
-      password: state.password,
-    };
+    if (numberLength > 10) {
+      return [
+        "(",
+        /[1-9]/,
+        /[1-9]/,
+        ")",
+        " ",
+        /\d/,
+        /\d/,
+        /\d/,
+        /\d/,
+        /\d/,
+        "-",
+        /\d/,
+        /\d/,
+        /\d/,
+        /\d/,
+      ];
+    } else {
+      return [
+        "(",
+        /[1-9]/,
+        /[1-9]/,
+        ")",
+        " ",
+        /\d/,
+        /\d/,
+        /\d/,
+        /\d/,
+        "-",
+        /\d/,
+        /\d/,
+        /\d/,
+        /\d/,
+      ];
+    }
+  }
 
+  function handleCep() {
+    const cepInput = String(getValues("cep")).replace("-", "");
+    cep(cepInput).then((result) => {
+      setValue("state", result.state);
+      setValue("city", result.city);
+      setValue("neighborhood", result.neighborhood);
+      setValue("street", result.street);
+    });
+  }
+
+  async function onSubmit(data) {
     try {
-      await api.post("users", postData);
+      delete data.confirmPassword;
+      delete data.termos;
+
+      data.whatsapp = "+55" + data.whatsapp.replace(/[() -]/g, "");
+
+      await api.post("ongs", data);
+
       history.push("/");
-    } catch {
+    } catch (error) {
       alert("Falha no cadastro, tente novamente mais tarde.");
     }
   }
@@ -64,194 +167,148 @@ export default function Register() {
           </div>
           <div className="row">
             <div className="col-lg-8">
-              <form onSubmit={handleSignUp}>
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="form-row">
-                  <div className="form-group col-md-6">
-                    <label htmlFor="inputUsername">Nome da ONG</label>
-                    <div className="input-group mb-3 input-group-sm d-flex align-items-center">
-                      <div className="input-group-prepend">
-                        <div className="input-group-text bg-white icon-fa">
-                          &#xf007;
-                        </div>
-                      </div>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="inputUsername"
-                        placeholder="Nome de usuário"
-                        onChange={(e) =>
-                          setState({ ...state, username: e.target.value })
-                        }
-                        required
-                      />
-                      <div className="invalid-feedback">
-                        Já existe uma ONG cadastrada com esse nome.
-                      </div>
-                    </div>
-                  </div>
-                  <div className="form-group col-md-6">
-                    <label htmlFor="inputEmail">Email</label>
-                    <div className="input-group mb-3 input-group-sm d-flex align-items-center">
-                      <div className="input-group-prepend">
-                        <div className="input-group-text bg-white icon-fa">
-                          &#xf0e0;
-                        </div>
-                      </div>
-                      <input
-                        type="email"
-                        className="form-control"
-                        id="inputEmail"
-                        placeholder="email@email.com"
-                        onChange={(e) =>
-                          setState({ ...state, email: e.target.value })
-                        }
-                        required
-                      />
-                      <div className="invalid-feedback">
-                        Já existe uma ONG cadastrada com esse Email.
-                      </div>
-                    </div>
-                  </div>
+                  <Input
+                    label="Nome da ONG"
+                    name="name"
+                    type="text"
+                    placeholder="Nome"
+                    maxLength={80}
+                    column="col-md-6"
+                    icon="&#xf007;"
+                    errorsInput={errors.name}
+                    register={register}
+                  />
+                  <Input
+                    label="Email"
+                    name="email"
+                    type="email"
+                    placeholder="email@email.com"
+                    maxLength={254}
+                    column="col-md-6"
+                    icon="&#xf0e0;"
+                    errorsInput={errors.email}
+                    register={register}
+                  />
                 </div>
                 <div className="form-row">
-                  <div className="form-group col-md-6">
-                    <label htmlFor="inputWhatsapp">Whatsapp</label>
-                    <div className="input-group mb-3 input-group-sm d-flex align-items-center">
-                      <div className="input-group-prepend">
-                        <div className="input-group-text bg-white icon-fa">
-                          &#xf879;
-                        </div>
-                      </div>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="inputWhatsapp"
-                        placeholder="(41) 99999-9999"
-                        onChange={(e) =>
-                          setState({ ...state, whatsapp: e.target.value })
-                        }
-                        required
-                      />
-                      <div className="invalid-feedback">
-                        Já existe uma ONG cadastrada com esse Whatsapp.
-                      </div>
-                    </div>
-                  </div>
-                  <div className="form-group col-md-4">
-                    <label htmlFor="inputCity">Cidade</label>
-                    <div className="input-group mb-3 input-group-sm d-flex align-items-center">
-                      <div className="input-group-prepend">
-                        <div className="input-group-text bg-white icon-fa">
-                          &#xf3c5;
-                        </div>
-                      </div>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="inputCity"
-                        placeholder="Cidade"
-                        onChange={(e) =>
-                          setState({ ...state, city: e.target.value })
-                        }
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="form-group col-md-2">
-                    <label htmlFor="inputState">Estado</label>
-                    <select
-                      id="inputState"
-                      className="input-group form-control-sm"
-                      onChange={(e) =>
-                        setState({ ...state, state: e.target.value })
-                      }
-                      required
-                    >
-                      <option>AC</option>
-                      <option>AL</option>
-                      <option>AP</option>
-                      <option>AM</option>
-                      <option>BA</option>
-                      <option>CE</option>
-                      <option>DF</option>
-                      <option>ES</option>
-                      <option>GO</option>
-                      <option>MA</option>
-                      <option>MT</option>
-                      <option>MS</option>
-                      <option>MG</option>
-                      <option>PA</option>
-                      <option>PB</option>
-                      <option>PR</option>
-                      <option>PE</option>
-                      <option>PI</option>
-                      <option>RJ</option>
-                      <option>RN</option>
-                      <option>RS</option>
-                      <option>RO</option>
-                      <option>RR</option>
-                      <option>SC</option>
-                      <option>SP</option>
-                      <option>SE</option>
-                      <option>TO</option>
-                    </select>
-                  </div>
+                  <InputMask
+                    label="Whatsapp"
+                    name="whatsapp"
+                    type="text"
+                    placeholder="(41) 99999-9999"
+                    maxLength={15}
+                    column="col-md-4"
+                    icon="&#xf879;"
+                    errorsInput={errors.whatsapp}
+                    control={control}
+                    mask={whatsappMask}
+                  />
+                  <InputMask
+                    label="CEP"
+                    name="cep"
+                    type="text"
+                    placeholder="00000-000"
+                    maxLength={9}
+                    column="col-md-2"
+                    icon="&#xf3c5;"
+                    errorsInput={errors.cep}
+                    control={control}
+                    mask={[/\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/]}
+                    onBlur={handleCep}
+                  />
+                  <Input
+                    label="Cidade"
+                    name="city"
+                    type="text"
+                    placeholder="Cidade"
+                    maxLength={64}
+                    column="col-md-4"
+                    icon="&#xf3c5;"
+                    errorsInput={errors.city}
+                    register={register}
+                  />
+                  <Input
+                    label="Estado"
+                    name="state"
+                    type="text"
+                    placeholder="Estado"
+                    maxLength={2}
+                    column="col-md-2"
+                    icon="&#xf3c5;"
+                    errorsInput={errors.state}
+                    register={register}
+                  />
                 </div>
                 <div className="form-row">
-                  <div className="form-group col-md-6">
-                    <label htmlFor="inputPassword">Senha</label>
-                    <div className="input-group mb-3 input-group-sm d-flex align-items-center">
-                      <div className="input-group-prepend">
-                        <div className="input-group-text bg-white icon-fa">
-                          &#xf023;
-                        </div>
-                      </div>
-                      <input
-                        type="password"
-                        className="form-control"
-                        id="inputPassword"
-                        placeholder="Senha"
-                        onChange={(e) =>
-                          setState({ ...state, password: e.target.value })
-                        }
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="form-group col-md-6">
-                    <label htmlFor="inputConfirmPassword">
-                      Confirmar senha
-                    </label>
-                    <div className="input-group mb-3 input-group-sm d-flex align-items-center">
-                      <div className="input-group-prepend">
-                        <div className="input-group-text bg-white icon-fa">
-                          &#xf023;
-                        </div>
-                      </div>
-                      <input
-                        type="password"
-                        className="form-control"
-                        id="inputConfirmPassword"
-                        placeholder="Redigite a senha"
-                        onChange={(e) =>
-                          setState({
-                            ...state,
-                            confirmPassword: e.target.value,
-                          })
-                        }
-                        required
-                      />
-                    </div>
-                  </div>
+                  <Input
+                    label="Bairro"
+                    name="neighborhood"
+                    type="text"
+                    placeholder="Bairro"
+                    maxLength={254}
+                    column="col-md-4"
+                    icon="&#xf3c5;"
+                    errorsInput={errors.neighborhood}
+                    register={register}
+                  />
+                  <Input
+                    label="Rua"
+                    name="street"
+                    type="text"
+                    placeholder="Nome da Rua"
+                    maxLength={254}
+                    column="col-md-4"
+                    icon="&#xf3c5;"
+                    errorsInput={errors.street}
+                    register={register}
+                  />
+                  <Input
+                    label="Número"
+                    name="streetNumber"
+                    type="text"
+                    placeholder="Número"
+                    maxLength={64}
+                    column="col-md-4"
+                    icon="&#xf3c5;"
+                    errorsInput={errors.streetNumber}
+                    register={register}
+                  />
+                </div>
+                <div className="form-row">
+                  <Input
+                    label="Senha"
+                    name="password"
+                    type="password"
+                    placeholder="Senha"
+                    maxLength={16}
+                    column="col-md-6"
+                    icon="&#xf023;"
+                    errorsInput={errors.password}
+                    register={register}
+                  />
+                  <Input
+                    label="Confirmar Senha"
+                    name="confirmPassword"
+                    type="password"
+                    placeholder="Senha"
+                    maxLength={16}
+                    column="col-md-6"
+                    icon="&#xf023;"
+                    errorsInput={errors.confirmPassword}
+                    register={register}
+                  />
                 </div>
                 <div className="form-group row form-check ml-0">
                   <input
                     className="form-check-input"
                     type="checkbox"
-                    value=""
-                    id="defaultCheck1"
+                    id="termos"
+                    name="termos"
+                    ref={register}
                   />
-                  <label className="form-check-label" htmlFor="defaultCheck1">
+                  <label className="form-check-label" htmlFor="termos">
                     Aceito os{" "}
                     <Link to="/useterms" target="_blank">
                       Termos de Uso
@@ -261,6 +318,11 @@ export default function Register() {
                       Política de Privacidade
                     </Link>
                   </label>
+                  {errors.termos && (
+                    <div className="invalid-feedback d-block">
+                      {errors.termos.message}
+                    </div>
+                  )}
                 </div>
                 <div className="form-group row ml-0">
                   <button type="submit" className="btn btn-default">

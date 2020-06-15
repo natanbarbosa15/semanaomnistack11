@@ -25,4 +25,6 @@ yarn-error.log*
 .env
 .env.expressjs
 
-google-service-account.json
+service-account.json
+
+cors.json
