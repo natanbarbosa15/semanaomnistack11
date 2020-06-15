@@ -13,6 +13,11 @@ const redisClient = redis.createClient({
 const app = express();
 const port = process.env.PORT || 8080;
 
+if (process.env.NODE_ENV === "production") {
+  require("@google-cloud/trace-agent").start();
+  require("@google-cloud/debug-agent").start({ allowExpressions: true });
+}
+
 function initExpressAddons() {
   // Use CORS
   app.use(cors());
