@@ -1,0 +1,19 @@
+# client.yaml For Front-End ReactJS
+
+env: standard
+runtime: nodejs12
+service: default
+entrypoint: npm start
+handlers:
+  # Serve all static files
+  - url: /favicon\.ico
+    static_files: build/favicon.ico
+    upload: build/favicon.ico
+  - url: /static
+    static_dir: build/static
+  - url: /.*
+    secure: always
+    redirect_http_response_code: 301
+    script: auto
+inbound_services:
+  - warmup
