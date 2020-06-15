@@ -16,7 +16,7 @@ yup.setLocale({
     required: "Preencha o campo",
   },
   string: {
-    min: "É necessário ter ${min} caracteres",
+    min: (min) => `É necessário ter no mínimo ${min.min} caracteres`,
   },
 });
 
