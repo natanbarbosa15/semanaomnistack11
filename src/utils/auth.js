@@ -5,7 +5,12 @@ module.exports.getCurrentUser = async (request) => {
   try {
     const encodedHeader = request.header("x-endpoint-api-userinfo");
     if (!encodedHeader) return null;
-    const decodedHeader = jwt_decode(encodedHeader);
+    var decodedHeader = undefined;
+    if (process.env.NODE_ENV === "test") {
+      decodedHeader = JSON.parse(Buffer.from(encodedHeader, "base64"));
+    } else {
+      decodedHeader = jwt_decode(encodedHeader);
+    }
     var user = decodedHeader;
     if (process.env.NODE_ENV === "development") {
       user = await firebaseAdmin.auth().verifyIdToken(encodedHeader, true);
