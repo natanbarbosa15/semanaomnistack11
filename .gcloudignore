@@ -11,6 +11,7 @@
 # from your .gitignore file, remove the corresponding line
 # below:
 .git
+.github/
 .gitignore
 .gitpod.Dockerfile
 .gitpod.yml
@@ -19,3 +20,6 @@ README.md
 
 # Node.js dependencies:
 node_modules/
+
+# Google
+app.yaml
