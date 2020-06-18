@@ -54,9 +54,13 @@ jobs:
       - name: Create React build
         run: yarn build
 
+      - name: Set GitHub short SHA environment var
+        run: echo "::set-env name=SHA_GIT::$(echo $GITHUB_SHA | cut -c1-7)"
+
       - name: Deploy to App Engine
         id: Deploy
         uses: GoogleCloudPlatform/github-actions/appengine-deploy@master
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           promote: false
+          version: ${{ env.SHA_GIT }}

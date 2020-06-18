@@ -28,7 +28,7 @@
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open --config-file ./cypress/cypress.json"
   },
   "eslintConfig": {
     "extends": "react-app"
