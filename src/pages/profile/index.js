@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { FiPower, FiTrash2 } from "react-icons/fi";
 
+import routes from "../../constants/routes.js";
+
 import FirebaseContext from "../../services/firebase";
 import AuthContext from "../../services/session";
 
@@ -24,8 +26,8 @@ export default function Profile() {
     api.get("profile").then((response) => {
       setIncidents(response.data);
     });
-    function getUser() {
-      const { name } = firebase.getCurrentUser();
+    async function getUser() {
+      const { name } = await firebase.getCurrentUser();
       setOngName(name);
     }
     getUser();
@@ -49,7 +51,7 @@ export default function Profile() {
 
       localStorage.clear();
 
-      history.push("/");
+      history.push(String(routes.home));
     } catch (error) {
       console.error(error);
     }
@@ -61,10 +63,10 @@ export default function Profile() {
         <img src={imgLogo} alt="Be The Hero" />
         <span>Bem vindo(a), {ongName}</span>
 
-        <Link className="button" to="/app/newincident">
+        <Link className="button" id="newIncident" to={routes.newIncident}>
           Cadastrar novo caso
         </Link>
-        <button onClick={logout} type="button">
+        <button onClick={logout} id="logout" type="button">
           <FiPower size={18} color="#E02041" />
         </button>
       </header>
@@ -91,6 +93,7 @@ export default function Profile() {
             <button
               onClick={() => handleDeleteIncident(incident.id)}
               type="button"
+              id="delete"
             >
               <FiTrash2 size={20} color="#A8A8B3" />
             </button>

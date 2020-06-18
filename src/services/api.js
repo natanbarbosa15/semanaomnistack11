@@ -5,14 +5,12 @@ const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
 });
 
-api.interceptors.request.use(async (config) => {
+api.interceptors.request.use((config) => {
   const token = getToken();
-  if (process.env.NODE_ENV === "production") {
-    if (token) {
+  if (token) {
+    if (process.env.NODE_ENV === "production") {
       config.headers.Authorization = `Bearer ${token}`;
-    }
-  } else {
-    if (token) {
+    } else {
       config.headers["x-endpoint-api-userinfo"] = `${token}`;
     }
   }

@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+import routes from "../../constants/routes.js";
+
 import imgLogo from "../../assets/images/logo.svg";
 import imgHeroes from "../../assets/images/heroes.png";
 
@@ -26,35 +28,38 @@ export default function Index() {
             </div>
           </div>
           <div className="row d-flex justify-content-start ml-3 mt-3">
-            <Link to="/incidentsAll" className="btn btn-lg w-75 btn-default">
+            <Link
+              to={routes.incidentsAll}
+              className="btn btn-lg w-75 btn-default"
+            >
               VER CASOS
             </Link>
           </div>
           <div className="row d-flex justify-content-start ml-3 mt-3">
-            <Link to="/login" className="btn btn-lg w-75 btn-default">
+            <Link to={routes.login} className="btn btn-lg w-75 btn-default">
               LOGIN
             </Link>
           </div>
           <div className="row d-flex justify-content-start ml-3 mt-3">
-            <Link to="/register" className="btn btn-lg w-75 btn-default">
+            <Link to={routes.register} className="btn btn-lg w-75 btn-default">
               CADASTRO
             </Link>
           </div>
           <div className="row d-flex justify-content-start ml-3 mt-3">
-            <Link to="/about" className="btn btn-lg w-75 btn-default">
+            <Link to={routes.about} className="btn btn-lg w-75 btn-default">
               SOBRE
             </Link>
           </div>
           <div className="row d-flex justify-content-start ml-1 mt-3">
             <div className="col-md ml-0">
               {" "}
-              <Link to="/useterms" className="text-reset">
+              <Link to={routes.useTerms} className="text-reset">
                 <span>Termos de Uso</span>
               </Link>{" "}
             </div>
             <div className="col-md ml-0">
               {" "}
-              <Link to="/privacyterms" className="text-reset">
+              <Link to={routes.privacyTerms} className="text-reset">
                 <span>Política de Privacidade</span>
               </Link>{" "}
             </div>

@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import cep from "cep-promise";
 import * as yup from "yup";
+
+import routes from "../../constants/routes.js";
 
 import Input from "../../components/forms/input";
 import InputMask from "../../components/forms/inputMask";
@@ -34,7 +36,7 @@ const validationSchema = yup.object().shape({
   confirmPassword: yup
     .string()
     .required()
-    .oneOf([yup.ref("password"), null], "A senhas digitada não é igual"),
+    .oneOf([yup.ref("password"), null], "A senhas digitada não são iguais"),
   termos: yup
     .boolean()
     .required()
@@ -67,6 +69,9 @@ export default function Register() {
       termos: false,
     },
   });
+
+  const [errorMessage, setErrorMessage] = useState("");
+  const [displayErrorMessage, setDisplayErrorMessage] = useState("");
 
   const history = useHistory();
 
@@ -127,16 +132,19 @@ export default function Register() {
 
   async function onSubmit(data) {
     try {
+      setDisplayErrorMessage("");
+
       delete data.confirmPassword;
       delete data.termos;
 
-      data.whatsapp = "+55" + data.whatsapp.replace(/[() -]/g, "");
+      data.whatsapp = "+55" + data.whatsapp.replaceAll(/[() -]/g, "");
 
       await api.post("ongs", data);
 
-      history.push("/");
+      history.push(String(routes.home));
     } catch (error) {
-      alert("Falha no cadastro, tente novamente mais tarde.");
+      setDisplayErrorMessage("d-block");
+      setErrorMessage(error.response.data.message);
     }
   }
 
@@ -144,7 +152,7 @@ export default function Register() {
     <div className="container-fluid">
       <div className="row mt-3 no-gutters">
         <div className="col-sm-0">
-          <Link to="/" className="btn btn-default icon-fa">
+          <Link to={routes.home} className="btn btn-default icon-fa">
             &#xf060;
           </Link>
         </div>
@@ -310,11 +318,11 @@ export default function Register() {
                   />
                   <label className="form-check-label" htmlFor="termos">
                     Aceito os{" "}
-                    <Link to="/useterms" target="_blank">
+                    <Link to={routes.useTerms} target="_blank">
                       Termos de Uso
                     </Link>{" "}
                     e a{" "}
-                    <Link to="/privacyterms" target="_blank">
+                    <Link to={routes.privacyTerms} target="_blank">
                       Política de Privacidade
                     </Link>
                   </label>
@@ -325,6 +333,11 @@ export default function Register() {
                   )}
                 </div>
                 <div className="form-group row ml-0">
+                  <div
+                    className={`invalid-feedback mb-3 ${displayErrorMessage}`}
+                  >
+                    {errorMessage}
+                  </div>
                   <button type="submit" className="btn btn-default">
                     CADASTRAR
                   </button>

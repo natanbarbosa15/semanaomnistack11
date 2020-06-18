@@ -23,3 +23,18 @@ node_modules/
 
 # Google
 app.yaml
+
+# Source files
+src/
+public/
+config-overrides.js
+
+# Test files
+cypress/
+cypress.json
+
+# Env not production files
+.env.development
+.env.development.example
+.env.expressjs.example
+.env.production.example

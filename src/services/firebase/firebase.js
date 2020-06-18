@@ -15,6 +15,7 @@ class Firebase {
   constructor() {
     app.initializeApp(config);
     this.auth = app.auth();
+    this.auth.setPersistence(app.auth.Auth.Persistence.SESSION);
   }
 
   signInWithEmailAndPassword = (email, password) =>
@@ -24,11 +25,19 @@ class Firebase {
 
   passwordUpdate = (password) => this.auth.currentUser.updatePassword(password);
 
-  getCurrentUser = () => {
-    const email = this.auth.currentUser.email;
-    const name = this.auth.currentUser.displayName;
-    const id = this.auth.currentUser.uid;
-    return { email, name, id };
+  getCurrentUser = async () => {
+    return new Promise((resolve, reject) => {
+      this.auth.onAuthStateChanged(function (user) {
+        if (user) {
+          const email = user.email;
+          const name = user.displayName;
+          const id = user.uid;
+          resolve({ email, name, id });
+        } else {
+          resolve({ email: null, name: null, id: null });
+        }
+      });
+    });
   };
 
   signOut = () => this.auth.signOut();

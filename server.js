@@ -10,8 +10,10 @@ const redisClient = redis.createClient({
   url: process.env.REDIS_URL,
 });
 
+const { routes } = require("./routes.js");
+
 const app = express();
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 3000;
 
 if (process.env.NODE_ENV === "production") {
   require("@google-cloud/trace-agent").start();
@@ -39,21 +41,9 @@ app.use(express.static(path.join(__dirname, "build")));
 app.get("/_ah/warmup", function (req, res) {
   return res.status(200).send("Front-End OK!");
 });
-app.get(
-  [
-    "/",
-    "/login",
-    "/register",
-    "/about",
-    "/useterms",
-    "/privacyterms",
-    "/app/profile",
-    "/app/profile/newincident",
-  ],
-  function (req, res) {
-    res.sendFile(path.join(__dirname, "build", "index.html"));
-  }
-);
+app.get(Object.values(routes), function (req, res) {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+});
 
 // Invalid route handler
 app.all("*", function (req, res) {

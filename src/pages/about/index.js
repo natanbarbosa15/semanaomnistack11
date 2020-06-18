@@ -1,6 +1,7 @@
 import React from "react";
-
 import { Link } from "react-router-dom";
+
+import routes from "../../constants/routes.js";
 
 import imgLogo from "../../assets/images/logo.svg";
 import imgHeroes from "../../assets/images/heroes.png";
@@ -15,7 +16,7 @@ export default function About() {
     <div className="container-fluid">
       <div className="row mt-3 no-gutters">
         <div className="col-sm-0">
-          <Link to="/" className="btn btn-default icon-fa">
+          <Link to={routes.home} className="btn btn-default icon-fa">
             &#xf060;
           </Link>
         </div>

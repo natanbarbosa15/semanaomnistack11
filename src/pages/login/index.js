@@ -3,6 +3,8 @@ import { Link, useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
+import routes from "../../constants/routes.js";
+
 import Input from "../../components/forms/input";
 
 import FirebaseContext from "../../services/firebase";
@@ -50,7 +52,7 @@ export default function Login() {
       if (user) {
         handleLogin();
         await api.post("sessions", data);
-        history.push("/app/profile");
+        history.push(String(routes.profile));
       } else {
         setDisplayErrorMessage("d-block");
         setErrorMessage("Email e/ou senha inválidos.");
@@ -64,7 +66,7 @@ export default function Login() {
     <div className="container-fluid">
       <div className="row mt-3 no-gutters">
         <div className="col-sm-0">
-          <Link to="/" className="btn btn-default icon-fa">
+          <Link to={routes.home} className="btn btn-default icon-fa">
             &#xf060;
           </Link>
         </div>
@@ -115,9 +117,6 @@ export default function Login() {
                   <button type="submit" className="btn btn-default">
                     LOGIN
                   </button>
-                  <Link to="/register" className="text-reset ml-3">
-                    Esqueci minha senha
-                  </Link>
                 </div>
               </form>
             </div>
@@ -132,7 +131,7 @@ export default function Login() {
           </div>
           <div className="row">
             <div className="col-lg">
-              <Link to="/register" className="btn btn-default">
+              <Link to={routes.register} className="btn btn-default">
                 CADASTRO
               </Link>
             </div>

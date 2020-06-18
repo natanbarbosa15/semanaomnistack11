@@ -1,6 +1,8 @@
 import React from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
+import routes from "./constants/routes.js";
+
 import AuthContext from "./services/session";
 
 import Index from "./pages/index";
@@ -33,14 +35,14 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 const Routes = () => (
   <BrowserRouter>
     <Switch>
-      <Route exact path="/" component={Index} />
-      <Route path="/login" component={Login} />
-      <Route path="/register" component={Register} />
-      <Route path="/about" component={About} />
-      <Route path="/useterms" component={UseTerms} />
-      <Route path="/privacyterms" component={PrivacyTerms} />
-      <PrivateRoute path="/app/profile" component={Profile} />
-      <PrivateRoute path="/app/newincident" component={NewIncident} />
+      <Route exact path={routes.home} component={Index} />
+      <Route path={routes.login} component={Login} />
+      <Route path={routes.register} component={Register} />
+      <Route path={routes.about} component={About} />
+      <Route path={routes.useTerms} component={UseTerms} />
+      <Route path={routes.privacyTerms} component={PrivacyTerms} />
+      <PrivateRoute path={routes.profile} component={Profile} />
+      <PrivateRoute path={routes.newIncident} component={NewIncident} />
       <Route component={NotFound} />
     </Switch>
   </BrowserRouter>
