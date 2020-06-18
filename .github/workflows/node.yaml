@@ -63,9 +63,13 @@ jobs:
           gsutil cp gs://be-the-hero-275300.appspot.com/secrets/database/ssl/client/client.crt ./ssl_cert/postgres/client.crt
           gsutil cp gs://be-the-hero-275300.appspot.com/secrets/database/ssl/client/client.key ./ssl_cert/postgres/client.key
 
+      - name: Set GitHub short SHA environment var
+        run: echo "::set-env name=SHA_GIT::$(echo $GITHUB_SHA | cut -c1-7)"
+
       - name: Deploy to App Engine
         id: Deploy
         uses: GoogleCloudPlatform/github-actions/appengine-deploy@master
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           promote: false
+          version: ${{ env.SHA_GIT }}
