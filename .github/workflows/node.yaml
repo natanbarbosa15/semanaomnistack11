@@ -1,4 +1,4 @@
-name: NodeJS 12 CI
+name: ExpressJS Back-End CI/CD
 
 on:
   push:
