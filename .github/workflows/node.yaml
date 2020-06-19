@@ -47,20 +47,14 @@ jobs:
           export_default_credentials: true
 
       - name: Download required files
-        run: |
-          gsutil cp gs://be-the-hero-275300.appspot.com/secrets/frontend/.env .env
-          gsutil cp gs://be-the-hero-275300.appspot.com/secrets/frontend/.env.expressjs .env.expressjs
+        run: gsutil cp gs://be-the-hero-275300.appspot.com/secrets/frontend/.env .env
 
       - name: Create React build
         run: yarn build
 
-      - name: Set GitHub short SHA environment var
-        run: echo "::set-env name=SHA_GIT::$(echo $GITHUB_SHA | cut -c1-7)"
-
-      - name: Deploy to App Engine
-        id: Deploy
-        uses: GoogleCloudPlatform/github-actions/appengine-deploy@master
+      - name: Deploy to Firebase Hosting
+        uses: w9jds/firebase-action@master
         with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          promote: false
-          version: ${{ env.SHA_GIT }}
+          args: deploy --only hosting
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}

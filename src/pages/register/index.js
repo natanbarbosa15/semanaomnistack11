@@ -139,13 +139,10 @@ export default function Register() {
 
       data.whatsapp = "+55" + data.whatsapp.replace(/[() -]/g, "");
 
-      console.log(data);
-
       await api.post("ongs", data);
 
       history.push(String(routes.home));
     } catch (error) {
-      console.error(error);
       setDisplayErrorMessage("d-block");
       setErrorMessage(error.response.data.message);
     }

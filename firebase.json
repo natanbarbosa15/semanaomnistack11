@@ -1,0 +1,92 @@
+{
+  "hosting": {
+    "public": "build",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**",
+      "**/src/**",
+      "**/public/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ],
+    "headers": [
+      {
+        "source": "service-worker.js",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate"
+          }
+        ]
+      },
+      {
+        "source": "precache-manifest.*.js",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate"
+          }
+        ]
+      },
+      {
+        "source": "index.html",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate"
+          }
+        ]
+      },
+      {
+        "source": "favicon.ico",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=15768000"
+          }
+        ]
+      },
+      {
+        "source": "logo192.png",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=15768000"
+          }
+        ]
+      },
+      {
+        "source": "logo512.png",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=15768000"
+          }
+        ]
+      },
+      {
+        "source": "**/*.@(eot|otf|ttf|ttc|woff|font.css)",
+        "headers": [
+          {
+            "key": "Access-Control-Allow-Origin",
+            "value": "*"
+          }
+        ]
+      },
+      {
+        "source": "**/*.@(jpg|jpeg|gif|png|svg|css|js)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=15768000"
+          }
+        ]
+      }
+    ]
+  }
+}

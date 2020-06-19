@@ -26,6 +26,6 @@ yarn-error.log*
 .env.development
 .env.expressjs
 
-service-account.json
+.firebase
 
 cors.json
