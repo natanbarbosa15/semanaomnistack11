@@ -137,12 +137,15 @@ export default function Register() {
       delete data.confirmPassword;
       delete data.termos;
 
-      data.whatsapp = "+55" + data.whatsapp.replaceAll(/[() -]/g, "");
+      data.whatsapp = "+55" + data.whatsapp.replace(/[() -]/g, "");
+
+      console.log(data);
 
       await api.post("ongs", data);
 
       history.push(String(routes.home));
     } catch (error) {
+      console.error(error);
       setDisplayErrorMessage("d-block");
       setErrorMessage(error.response.data.message);
     }
