@@ -1,4 +1,4 @@
-# dispatch.yaml To receive traffic from /api to AdonisJS Back-End
+# dispatch.yaml To receive traffic to Back-End
 
 dispatch:
   # Send all trafic on /api to api service.

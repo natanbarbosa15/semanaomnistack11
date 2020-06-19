@@ -1,4 +1,4 @@
-# api.yaml For Back-End REST API AdonisJS
+# app.yaml For Back-End
 
 env: standard
 runtime: nodejs12
