@@ -1,3 +1,9 @@
 {
-  "baseUrl": "http://localhost:3000"
+  "baseUrl": "http://localhost:3000",
+  "testFiles": [
+    "about.spec.js",
+    "register.spec.js",
+    "auth.spec.js",
+    "incident.spec.js"
+  ]
 }

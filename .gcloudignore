@@ -31,7 +31,6 @@ config-overrides.js
 
 # Test files
 cypress/
-cypress.json
 
 # Env not production files
 .env.development
