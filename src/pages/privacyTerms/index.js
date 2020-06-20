@@ -11,7 +11,7 @@ export default function PrivacyTerms() {
       <div className="row mt-3 no-gutters">
         <div className="col-sm-0">
           <Link to={routes.home} className="btn btn-default icon-fa">
-            &#xf060;
+            <i className="fas fa-arrow-left" />
           </Link>
         </div>
         <div className="col ml-lg-5 mr-3">

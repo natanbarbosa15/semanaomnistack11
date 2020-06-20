@@ -67,7 +67,7 @@ export default function Login() {
       <div className="row mt-3 no-gutters">
         <div className="col-sm-0">
           <Link to={routes.home} className="btn btn-default icon-fa">
-            &#xf060;
+            <i className="fas fa-arrow-left" />
           </Link>
         </div>
         <div className="col-lg-5 ml-lg-5">
@@ -96,7 +96,7 @@ export default function Login() {
                   type="email"
                   placeholder="email@email.com"
                   maxLength={254}
-                  icon="&#xf0e0;"
+                  icon={<i className="fas fa-envelope"></i>}
                   errorsInput={errors.email}
                   register={register}
                 />
@@ -106,7 +106,7 @@ export default function Login() {
                   type="password"
                   placeholder="Senha"
                   maxLength={16}
-                  icon="&#xf023;"
+                  icon={<i className="fas fa-lock"></i>}
                   errorsInput={errors.password}
                   register={register}
                 />

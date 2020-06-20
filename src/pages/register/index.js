@@ -153,7 +153,7 @@ export default function Register() {
       <div className="row mt-3 no-gutters">
         <div className="col-sm-0">
           <Link to={routes.home} className="btn btn-default icon-fa">
-            &#xf060;
+            <i className="fas fa-arrow-left" />
           </Link>
         </div>
         <div className="col ml-lg-5 mr-3">
@@ -184,7 +184,7 @@ export default function Register() {
                     placeholder="Nome"
                     maxLength={80}
                     column="col-md-6"
-                    icon="&#xf007;"
+                    icon={<i className="fas fa-user"></i>}
                     errorsInput={errors.name}
                     register={register}
                   />
@@ -195,7 +195,7 @@ export default function Register() {
                     placeholder="email@email.com"
                     maxLength={254}
                     column="col-md-6"
-                    icon="&#xf0e0;"
+                    icon={<i className="fas fa-envelope"></i>}
                     errorsInput={errors.email}
                     register={register}
                   />
@@ -208,7 +208,7 @@ export default function Register() {
                     placeholder="(41) 99999-9999"
                     maxLength={15}
                     column="col-md-4"
-                    icon="&#xf879;"
+                    icon={<i className="fas fa-phone-alt"></i>}
                     errorsInput={errors.whatsapp}
                     control={control}
                     mask={whatsappMask}
@@ -220,7 +220,7 @@ export default function Register() {
                     placeholder="00000-000"
                     maxLength={9}
                     column="col-md-2"
-                    icon="&#xf3c5;"
+                    icon={<i className="fas fa-map-marker-alt"></i>}
                     errorsInput={errors.cep}
                     control={control}
                     mask={[/\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/]}
@@ -233,7 +233,7 @@ export default function Register() {
                     placeholder="Cidade"
                     maxLength={64}
                     column="col-md-4"
-                    icon="&#xf3c5;"
+                    icon={<i className="fas fa-map-marker-alt"></i>}
                     errorsInput={errors.city}
                     register={register}
                   />
@@ -244,7 +244,7 @@ export default function Register() {
                     placeholder="Estado"
                     maxLength={2}
                     column="col-md-2"
-                    icon="&#xf3c5;"
+                    icon={<i className="fas fa-map-marker-alt"></i>}
                     errorsInput={errors.state}
                     register={register}
                   />
@@ -257,7 +257,7 @@ export default function Register() {
                     placeholder="Bairro"
                     maxLength={254}
                     column="col-md-4"
-                    icon="&#xf3c5;"
+                    icon={<i className="fas fa-map-marker-alt"></i>}
                     errorsInput={errors.neighborhood}
                     register={register}
                   />
@@ -268,7 +268,7 @@ export default function Register() {
                     placeholder="Nome da Rua"
                     maxLength={254}
                     column="col-md-4"
-                    icon="&#xf3c5;"
+                    icon={<i className="fas fa-map-marker-alt"></i>}
                     errorsInput={errors.street}
                     register={register}
                   />
@@ -279,7 +279,7 @@ export default function Register() {
                     placeholder="Número"
                     maxLength={64}
                     column="col-md-4"
-                    icon="&#xf3c5;"
+                    icon={<i className="fas fa-map-marker-alt"></i>}
                     errorsInput={errors.streetNumber}
                     register={register}
                   />
@@ -292,7 +292,7 @@ export default function Register() {
                     placeholder="Senha"
                     maxLength={16}
                     column="col-md-6"
-                    icon="&#xf023;"
+                    icon={<i className="fas fa-lock"></i>}
                     errorsInput={errors.password}
                     register={register}
                   />
@@ -303,7 +303,7 @@ export default function Register() {
                     placeholder="Senha"
                     maxLength={16}
                     column="col-md-6"
-                    icon="&#xf023;"
+                    icon={<i className="fas fa-lock"></i>}
                     errorsInput={errors.confirmPassword}
                     register={register}
                   />

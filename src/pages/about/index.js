@@ -17,7 +17,7 @@ export default function About() {
       <div className="row mt-3 no-gutters">
         <div className="col-sm-0">
           <Link to={routes.home} className="btn btn-default icon-fa">
-            &#xf060;
+            <i className="fas fa-arrow-left" />
           </Link>
         </div>
         <div className="col-lg-5 ml-lg-5">
