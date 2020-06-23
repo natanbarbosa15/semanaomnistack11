@@ -1,15 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import routes from "../../constants/routes.js";
+import routes from "~/constants/routes.js";
 
-import imgLogo from "../../assets/images/logo.svg";
-import imgHeroes from "../../assets/images/heroes.png";
-import imgRocketseat from "../../assets/images/rocketseat.png";
-import imgNodejs from "../../assets/images/nodejs.png";
-import imgReact from "../../assets/images/react.png";
-import imgReactNative from "../../assets/images/reactnative.png";
-import imgGoogleCloud from "../../assets/images/googlecloud.png";
+import imgLogo from "~/assets/images/logo.svg";
+import imgHeroes from "~/assets/images/heroes.png";
+import imgRocketseat from "~/assets/images/rocketseat.png";
+import imgNodejs from "~/assets/images/nodejs.png";
+import imgReact from "~/assets/images/react.png";
+import imgReactNative from "~/assets/images/reactnative.png";
+import imgGoogleCloud from "~/assets/images/googlecloud.png";
 
 export default function About() {
   return (

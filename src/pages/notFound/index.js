@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import routes from "../../constants/routes.js";
+import routes from "~/constants/routes.js";
 
-import imgLogo from "../../assets/images/logo.svg";
+import imgLogo from "~/assets/images/logo.svg";
 
 export default function NotFound() {
   return (

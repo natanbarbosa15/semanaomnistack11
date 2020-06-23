@@ -1,6 +1,13 @@
 import routes from "../../src/constants/routes.js";
 
 describe("Login test", () => {
+  beforeEach(() => {
+    cy.server();
+    cy.route("POST", "identitytoolkit/**").as("firebase");
+    cy.route("POST", "api/v1/sessions").as("session");
+    cy.route("GET", "api/v1/profile").as("profile");
+  });
+
   it("Should be able to do Login", () => {
     cy.visit(Cypress.config().baseUrl);
 
@@ -17,8 +24,14 @@ describe("Login test", () => {
       .should("have.value", "teste12345");
     cy.contains("LOGIN").click();
 
+    cy.wait("@firebase");
+
+    cy.wait("@session");
+
     cy.url().should("eq", Cypress.config().baseUrl + String(routes.profile));
 
     cy.getToken().then((result) => cy.wrap(result).should("exist"));
+
+    cy.wait("@profile");
   });
 });

@@ -7,12 +7,15 @@ import AuthContext from "./services/session";
 
 import Index from "./pages/index";
 import Login from "./pages/login";
-import Register from "./pages/register";
+import Register from "./pages/ongs/create";
 import About from "./pages/about";
 import UseTerms from "./pages/useTerms";
 import PrivacyTerms from "./pages/privacyTerms";
 import Profile from "./pages/profile";
-import NewIncident from "./pages/newIncident";
+import UpdateProfile from "./pages/ongs/update";
+import UpdatePassword from "./pages/ongs/password";
+import NewIncident from "./pages/incidents/create";
+import UpdateIncident from "./pages/incidents/update";
 import NotFound from "./pages/notFound";
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
@@ -41,8 +44,23 @@ const Routes = () => (
       <Route path={routes.about} component={About} />
       <Route path={routes.useTerms} component={UseTerms} />
       <Route path={routes.privacyTerms} component={PrivacyTerms} />
-      <PrivateRoute path={routes.profile} component={Profile} />
-      <PrivateRoute path={routes.newIncident} component={NewIncident} />
+      <PrivateRoute exact path={routes.profile} component={Profile} />
+      <PrivateRoute exact path={routes.newIncident} component={NewIncident} />
+      <PrivateRoute
+        exact
+        path={routes.updateIncident + "/:id"}
+        component={UpdateIncident}
+      />
+      <PrivateRoute
+        exact
+        path={routes.updateProfile}
+        component={UpdateProfile}
+      />
+      <PrivateRoute
+        exact
+        path={routes.updatePassword}
+        component={UpdatePassword}
+      />
       <Route component={NotFound} />
     </Switch>
   </BrowserRouter>

@@ -1,6 +1,11 @@
 import routes from "../../src/constants/routes.js";
 
 describe("User register test", () => {
+  beforeEach(() => {
+    cy.server();
+    cy.route("POST", "api/v1/ongs").as("register");
+  });
+
   it("Should be able to do Register", () => {
     cy.visit(Cypress.config().baseUrl);
 
@@ -33,6 +38,8 @@ describe("User register test", () => {
       .should("have.value", "teste12345");
     cy.get("input#termos").click();
     cy.contains("CADASTRAR").click();
+
+    cy.wait("@register");
 
     cy.url().should("eq", String(Cypress.config().baseUrl + "/"));
   });

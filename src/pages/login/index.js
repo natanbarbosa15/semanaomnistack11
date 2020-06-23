@@ -3,18 +3,18 @@ import { Link, useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
-import routes from "../../constants/routes.js";
+import routes from "~/constants/routes.js";
 
-import Input from "../../components/forms/input";
+import Input from "~/components/forms/input";
 
-import FirebaseContext from "../../services/firebase";
-import AuthContext from "../../services/session";
+import FirebaseContext from "~/services/firebase";
+import AuthContext from "~/services/session";
 
-import api from "../../services/api";
-import { login } from "../../services/auth";
+import api from "~/services/api";
+import { login } from "~/services/auth";
 
-import imgLogo from "../../assets/images/logo.svg";
-import imgHeroes from "../../assets/images/heroes.png";
+import imgLogo from "~/assets/images/logo.svg";
+import imgHeroes from "~/assets/images/heroes.png";
 
 yup.setLocale({
   mixed: {
@@ -38,7 +38,8 @@ export default function Login() {
   });
 
   const [errorMessage, setErrorMessage] = useState("");
-  const [displayErrorMessage, setDisplayErrorMessage] = useState("");
+  const [displayErrorMessage, setDisplayErrorMessage] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const history = useHistory();
 
@@ -47,21 +48,37 @@ export default function Login() {
 
   async function onSubmit(data) {
     try {
-      setDisplayErrorMessage("");
+      setLoading(true);
+      setDisplayErrorMessage(false);
       const user = await login(data.email, data.password, firebase);
       if (user) {
         handleLogin();
         await api.post("sessions", data);
         history.push(String(routes.profile));
       } else {
-        setDisplayErrorMessage("d-block");
+        setLoading(false);
+        setDisplayErrorMessage(true);
         setErrorMessage("Email e/ou senha inválidos.");
       }
     } catch {
-      setDisplayErrorMessage("d-block");
+      setLoading(false);
+      setDisplayErrorMessage(true);
       setErrorMessage("Falha no Login, tente novamente mais tarde.");
     }
   }
+
+  const ButtonSubmit = () => {
+    if (loading) {
+      return (
+        <span>
+          AGUARDE <i className="fa fa-spinner fa-spin fa-1x fa-fw" />
+        </span>
+      );
+    } else {
+      return <span>LOGIN</span>;
+    }
+  };
+
   return (
     <div className="container-fluid">
       <div className="row mt-3 no-gutters">
@@ -110,12 +127,14 @@ export default function Login() {
                   errorsInput={errors.password}
                   register={register}
                 />
-                <div className={`invalid-feedback mb-3 ${displayErrorMessage}`}>
-                  {errorMessage}
-                </div>
+                {displayErrorMessage && (
+                  <div className="invalid-feedback mb-3 d-block">
+                    {errorMessage}
+                  </div>
+                )}
                 <div className="form-group row ml-0">
                   <button type="submit" className="btn btn-default">
-                    LOGIN
+                    <ButtonSubmit />
                   </button>
                 </div>
               </form>

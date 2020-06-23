@@ -1,10 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import routes from "../../constants/routes.js";
+import routes from "~/constants/routes.js";
 
-import imgLogo from "../../assets/images/logo.svg";
-import imgHeroes from "../../assets/images/heroes.png";
+import imgLogo from "~/assets/images/logo.svg";
+import imgHeroes from "~/assets/images/heroes.png";
 
 export default function Index() {
   return (

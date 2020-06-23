@@ -10,13 +10,16 @@ const Input = ({
   icon,
   errorsInput,
   register,
+  handleChange,
 }) => (
   <div className={`form-group ${column}`}>
     <label htmlFor={name}>{label}</label>
     <div className="input-group mb-3 input-group-sm d-flex align-items-center">
-      <div className="input-group-prepend">
-        <div className="input-group-text bg-white icon-fa">{icon}</div>
-      </div>
+      {icon && (
+        <div className="input-group-prepend">
+          <div className="input-group-text bg-white icon-fa">{icon}</div>
+        </div>
+      )}
       <input
         type={type}
         className="form-control"
@@ -25,6 +28,7 @@ const Input = ({
         placeholder={placeholder}
         ref={register}
         maxLength={maxLength}
+        onChange={handleChange}
         required
       />
       {errorsInput && (

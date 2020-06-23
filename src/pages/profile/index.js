@@ -1,28 +1,24 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link, useHistory } from "react-router-dom";
-import { FiPower, FiTrash2 } from "react-icons/fi";
+import { Link } from "react-router-dom";
+import { FiTrash2, FiEdit } from "react-icons/fi";
 
-import routes from "../../constants/routes.js";
+import FirebaseContext from "~/services/firebase";
 
-import FirebaseContext from "../../services/firebase";
-import AuthContext from "../../services/session";
+import api from "~/services/api";
 
-import api from "../../services/api";
+import Header from "~/components/app/header";
 
-import "./styles.css";
-
-import imgLogo from "../../assets/images/logo.svg";
+import routes from "~/constants/routes";
 
 export default function Profile() {
   const [incidents, setIncidents] = useState([]);
   const [ongName, setOngName] = useState("");
 
   const firebase = useContext(FirebaseContext);
-  const { handleLogout } = useContext(AuthContext);
-
-  const history = useHistory();
 
   useEffect(() => {
+    const abortController = new AbortController();
+
     api.get("profile").then((response) => {
       setIncidents(response.data);
     });
@@ -31,6 +27,10 @@ export default function Profile() {
       setOngName(name);
     }
     getUser();
+
+    return () => {
+      abortController.abort();
+    };
   }, [firebase]);
 
   async function handleDeleteIncident(id) {
@@ -43,63 +43,71 @@ export default function Profile() {
     }
   }
 
-  async function logout() {
-    try {
-      firebase.signOut();
-
-      handleLogout();
-
-      localStorage.clear();
-
-      history.push(String(routes.home));
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   return (
-    <div className="profile-container">
-      <header>
-        <img src={imgLogo} alt="Be The Hero" />
-        <span>Bem vindo(a), {ongName}</span>
-
-        <Link className="button" id="newIncident" to={routes.newIncident}>
-          Cadastrar novo caso
-        </Link>
-        <button onClick={logout} id="logout" type="button">
-          <FiPower size={18} color="#E02041" />
-        </button>
-      </header>
-
-      <h1>Casos cadastrados</h1>
-
-      <ul>
-        {incidents.map((incident) => (
-          <li key={incident.id}>
-            <strong>Caso:</strong>
-            <p>{incident.title}</p>
-
-            <strong>Descrição:</strong>
-            <p>{incident.description}</p>
-
-            <strong>Valor:</strong>
-            <p>
-              {Intl.NumberFormat("pt-BR", {
-                style: "currency",
-                currency: "BRL",
-              }).format(incident.value)}
-            </p>
-
-            <button
-              onClick={() => handleDeleteIncident(incident.id)}
-              type="button"
-              id="delete"
-            >
-              <FiTrash2 size={20} color="#A8A8B3" />
-            </button>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <>
+      <Header />
+      <div className="container">
+        <div className="container-fluid pt-3">
+          <div className="row mt-3">
+            <div className="col-md">
+              <p className="h3">Bem vindo(a), {ongName}</p>
+            </div>
+          </div>
+          <div className="row mt-2">
+            <div className="col-md">
+              <p className="h1">Casos cadastrados</p>
+            </div>
+          </div>
+          <div className="row mt-2">
+            {incidents.map((incident) => (
+              <div className="col-md-6 mt-3 mb-3" key={incident.id}>
+                <div className="card flex-md-row box-shadow border border-white rounded">
+                  <div className="card-body d-flex flex-column align-items-start ml-2 mt-2 mb-3">
+                    <p className="card-subtitle d-flex justify-content-between w-100">
+                      <strong>Caso:</strong>
+                      <span className="justify-content-between">
+                        <Link
+                          to={routes.updateIncident + `/${incident.id}`}
+                          id="updateIncident"
+                        >
+                          <FiEdit size={20} color="#A8A8B3" />
+                        </Link>
+                        <button
+                          onClick={() => handleDeleteIncident(incident.id)}
+                          type="button"
+                          id="delete"
+                          className="btn bg-transparent"
+                          title="Excluir"
+                        >
+                          <FiTrash2 size={20} color="#A8A8B3" />
+                        </button>
+                      </span>
+                    </p>
+                    <p className="card-text" id="title">
+                      {incident.title}
+                    </p>
+                    <p className="card-subtitle">
+                      <strong>Descrição:</strong>
+                    </p>
+                    <p className="card-text mt-2" id="description">
+                      {incident.description}
+                    </p>
+                    <p className="card-subtitle">
+                      <strong>Valor:</strong>
+                    </p>
+                    <p className="card-text mt-2" id="value">
+                      {Intl.NumberFormat("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      }).format(incident.value)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </>
   );
 }

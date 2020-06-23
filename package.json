@@ -14,7 +14,15 @@
     "cypress:open": "cypress open --config-file ./cypress/cypress.json"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "settings": {
+      "import/resolver": {
+        "babel-plugin-root-import": {
+          "rootPathPrefix": "~",
+          "rootPathSuffix": "src"
+        }
+      }
+    }
   },
   "browserslist": {
     "production": [
@@ -34,10 +42,12 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "axios": "^0.19.2",
+    "babel-plugin-root-import": "^6.5.0",
     "bootstrap": "^4.5.0",
     "cep-promise": "^3.0.9",
     "cross-env": "^7.0.2",
-    "cypress": "^4.8.0",
+    "customize-cra": "^1.0.0",
+    "cypress": "4.9.0",
     "eslint-plugin-chai-friendly": "^0.6.0",
     "eslint-plugin-cypress": "^2.11.1",
     "firebase": "^7.14.5",

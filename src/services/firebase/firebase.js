@@ -25,6 +25,8 @@ class Firebase {
 
   passwordUpdate = (password) => this.auth.currentUser.updatePassword(password);
 
+  updateCurrentUser = () => this.auth.currentUser.reload();
+
   getCurrentUser = async () => {
     return new Promise((resolve, reject) => {
       this.auth.onAuthStateChanged(function (user) {
