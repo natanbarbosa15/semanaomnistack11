@@ -226,7 +226,6 @@ describe("ONG, Session, Profile and Incidents", () => {
     const data = {
       name: "update",
       email: "update@teste.com",
-      password: "teste12345",
       whatsapp: "+5541999999998",
       cep: "90000-000",
       city: "Update",
@@ -243,12 +242,40 @@ describe("ONG, Session, Profile and Incidents", () => {
 
     expect(response.statusCode).toBe(200);
 
-    delete data.password;
     data.id = ongTest.id;
 
     const result = await connection("ongs").select("*").where("id", ongTest.id);
 
     expect(result[0]).toEqual(data);
+  });
+
+  it("should be able to read ONG", async () => {
+    const ongTest = await connection("ongs").select("*").first();
+    const token = Buffer.from(
+      JSON.stringify({ id: String(ongTest.id) }),
+      "binary"
+    ).toString("base64");
+
+    const response = await request(app)
+      .get(`${basePath}/ongs`)
+      .set({ "x-endpoint-api-userinfo": token });
+
+    expect(response.statusCode).toBe(200);
+
+    expect(response.body).toEqual([
+      {
+        id: String(ongTest.id),
+        name: "update",
+        email: "update@teste.com",
+        whatsapp: "+5541999999998",
+        cep: "90000-000",
+        city: "Update",
+        state: "PR",
+        neighborhood: "Update",
+        street: "Rua Update",
+        streetNumber: "2",
+      },
+    ]);
   });
 
   it("should be able to delete ONG", async () => {

@@ -60,12 +60,32 @@ module.exports = {
     }
   },
 
+  async read(request, response) {
+    try {
+      const user = await getCurrentUser(request);
+      if (!user) {
+        return response.status(403).send("Forbidden");
+      }
+      const ong = await connection("ongs")
+        .select("*")
+        .where("id", user.id)
+        .first();
+      if (!ong) {
+        return response.status(403).send("Forbidden");
+      } else {
+        return response.json(ong);
+      }
+    } catch (error) {
+      console.error(error);
+      return response.status(500).send("Internal Server Error");
+    }
+  },
+
   async update(request, response) {
     try {
       const {
         name,
         email,
-        password,
         whatsapp,
         cep,
         city,
@@ -89,8 +109,7 @@ module.exports = {
 
       await firebaseAdmin.auth().updateUser(user.id, {
         email,
-        password,
-        displayName: `${name} ${email}`,
+        displayName: String(name),
       });
 
       await connection("ongs")

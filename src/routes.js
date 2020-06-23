@@ -38,13 +38,22 @@ routes.post(
   OngController.create
 );
 
+routes.get(
+  "/ongs/:id",
+  celebrate({
+    [Segments.PARAMS]: Joi.object().keys({
+      id: Joi.string().required(),
+    }),
+  }),
+  OngController.read
+);
+
 routes.put(
   "/ongs",
   celebrate({
     [Segments.BODY]: Joi.object().keys({
       name: Joi.string().required(),
       email: Joi.string().required().email(),
-      password: Joi.string().required(),
       whatsapp: Joi.string().required().min(13).max(14),
       cep: Joi.string().required().min(9),
       city: Joi.string().required(),
