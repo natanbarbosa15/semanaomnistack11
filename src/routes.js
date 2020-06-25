@@ -3,9 +3,10 @@ import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 import routes from "./constants/routes.js";
 
-import AuthContext from "./services/session";
+import FirebaseContext from "./services/firebase";
 
 import Index from "./pages/index";
+import Incidents from "./pages/incidents/index";
 import Login from "./pages/login";
 import Register from "./pages/ongs/create";
 import About from "./pages/about";
@@ -17,14 +18,17 @@ import UpdatePassword from "./pages/ongs/password";
 import NewIncident from "./pages/incidents/create";
 import UpdateIncident from "./pages/incidents/update";
 import NotFound from "./pages/notFound";
+import Loading from "./pages/loading";
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
-  <AuthContext.Consumer>
-    {({ signed }) => (
+  <FirebaseContext.Consumer>
+    {({ signed, loadingUser }) => (
       <Route
         {...rest}
         render={(props) =>
-          signed ? (
+          loadingUser ? (
+            <Loading />
+          ) : signed ? (
             <Component {...props} />
           ) : (
             <Redirect to={{ pathname: "/", state: { from: props.location } }} />
@@ -32,13 +36,14 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
         }
       />
     )}
-  </AuthContext.Consumer>
+  </FirebaseContext.Consumer>
 );
 
 const Routes = () => (
   <BrowserRouter>
     <Switch>
       <Route exact path={routes.home} component={Index} />
+      <Route path={routes.incidents} component={Incidents} />
       <Route path={routes.login} component={Login} />
       <Route path={routes.register} component={Register} />
       <Route path={routes.about} component={About} />

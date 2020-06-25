@@ -1,5 +1,6 @@
 export default {
   home: "/",
+  incidents: "/incidents",
   login: "/login",
   register: "/register",
   about: "/about",
@@ -10,5 +11,4 @@ export default {
   updateIncident: "/app/incident/update",
   updateProfile: "/app/profile",
   updatePassword: "/app/profile/password",
-  incidentsAll: "/incidentsall",
 };

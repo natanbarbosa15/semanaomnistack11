@@ -1,4 +1,4 @@
-import app from "firebase/app";
+import firebase from "firebase/app";
 import "firebase/auth";
 
 const config = {
@@ -13,9 +13,9 @@ const config = {
 
 class Firebase {
   constructor() {
-    app.initializeApp(config);
-    this.auth = app.auth();
-    this.auth.setPersistence(app.auth.Auth.Persistence.SESSION);
+    !firebase.apps.length ? firebase.initializeApp(config) : firebase.app();
+    this.auth = firebase.auth();
+    this.auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
   }
 
   signInWithEmailAndPassword = (email, password) =>
@@ -24,6 +24,17 @@ class Firebase {
   passwordReset = (email) => this.auth.sendPasswordResetEmail(email);
 
   passwordUpdate = (password) => this.auth.currentUser.updatePassword(password);
+
+  getIdToken = async () => await this.auth.currentUser.getIdToken();
+
+  isSignedIn = async () => {
+    return new Promise((resolve, reject) => {
+      this.auth.onAuthStateChanged(function (user) {
+        if (user) resolve(true);
+        else resolve(false);
+      });
+    });
+  };
 
   updateCurrentUser = () => this.auth.currentUser.reload();
 

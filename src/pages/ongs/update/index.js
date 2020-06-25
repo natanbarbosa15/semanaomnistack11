@@ -5,16 +5,15 @@ import cep from "cep-promise";
 import * as yup from "yup";
 
 import FirebaseContext from "~/services/firebase";
-import AuthContext from "~/services/session";
+
+import Api from "~/services/api";
 
 import routes from "~/constants/routes.js";
 
 import Header from "~/components/app/header";
-
 import Input from "~/components/forms/input";
 import InputMask from "~/components/forms/inputMask";
-
-import api from "~/services/api";
+import LoadingComponent from "~/components/loading";
 
 yup.setLocale({
   mixed: {
@@ -63,12 +62,14 @@ export default function UpdateProfile() {
 
   const [errorMessage, setErrorMessage] = useState("");
   const [displayErrorMessage, setDisplayErrorMessage] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const firebase = useContext(FirebaseContext);
-  const { handleLogout } = useContext(AuthContext);
+  const [loadingSubmit, setLoadingSubmit] = useState(false);
+  const [loadingPage, setLoadingPage] = useState(true);
 
   const history = useHistory();
+
+  const { firebase } = useContext(FirebaseContext);
+
+  const api = Api(firebase);
 
   useEffect(() => {
     function handleWhatsappData(value) {
@@ -93,10 +94,11 @@ export default function UpdateProfile() {
         setValue("neighborhood", response.data.neighborhood, true);
         setValue("street", response.data.street, true);
         setValue("streetNumber", response.data.streetNumber, true);
+        setLoadingPage(false);
       });
     }
     getUser();
-  }, [firebase, setValue]);
+  }, [firebase, setValue, loadingPage, api]);
 
   function whatsappMask(value) {
     let numbers = value.match(/\d/g);
@@ -155,7 +157,7 @@ export default function UpdateProfile() {
 
   async function onSubmit(data) {
     try {
-      setLoading(true);
+      setLoadingSubmit(true);
       setDisplayErrorMessage(false);
 
       const { email } = await firebase.getCurrentUser();
@@ -174,21 +176,19 @@ export default function UpdateProfile() {
       } else {
         firebase.signOut();
 
-        handleLogout();
-
         localStorage.clear();
 
         history.push(String(routes.login));
       }
     } catch (error) {
-      setLoading(false);
+      setLoadingSubmit(false);
       setDisplayErrorMessage(true);
       setErrorMessage(error.response.data.message);
     }
   }
 
   const ButtonSubmit = () => {
-    if (loading) {
+    if (loadingSubmit) {
       return (
         <span>
           AGUARDE <i className="fa fa-spinner fa-spin fa-1x fa-fw" />
@@ -204,143 +204,157 @@ export default function UpdateProfile() {
       <Header />
       <div className="container d-flex align-content-center justify-content-center mt-5">
         <div className="container-fluid">
-          <div className="row">
-            <div className="col-lg-8">
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="form-row">
-                  <Input
-                    label="Nome da ONG"
-                    name="name"
-                    type="text"
-                    placeholder="Nome"
-                    maxLength={80}
-                    column="col-md-6"
-                    icon={<i className="fas fa-user"></i>}
-                    errorsInput={errors.name}
-                    register={register}
-                  />
-                  <Input
-                    label="Email"
-                    name="email"
-                    type="email"
-                    placeholder="email@email.com"
-                    maxLength={254}
-                    column="col-md-6"
-                    icon={<i className="fas fa-envelope"></i>}
-                    errorsInput={errors.email}
-                    register={register}
-                  />
-                </div>
-                <div className="form-row">
-                  <InputMask
-                    label="Whatsapp"
-                    name="whatsapp"
-                    type="text"
-                    placeholder="(41) 99999-9999"
-                    maxLength={15}
-                    column="col-md-4"
-                    icon={<i className="fas fa-phone-alt"></i>}
-                    errorsInput={errors.whatsapp}
-                    control={control}
-                    mask={whatsappMask}
-                  />
-                  <InputMask
-                    label="CEP"
-                    name="cep"
-                    type="text"
-                    placeholder="00000-000"
-                    maxLength={9}
-                    column="col-md-2"
-                    icon={<i className="fas fa-map-marker-alt"></i>}
-                    errorsInput={errors.cep}
-                    control={control}
-                    mask={[/\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/]}
-                    onBlur={handleCep}
-                  />
-                  <Input
-                    label="Cidade"
-                    name="city"
-                    type="text"
-                    placeholder="Cidade"
-                    maxLength={64}
-                    column="col-md-4"
-                    icon={<i className="fas fa-map-marker-alt"></i>}
-                    errorsInput={errors.city}
-                    register={register}
-                  />
-                  <Input
-                    label="Estado"
-                    name="state"
-                    type="text"
-                    placeholder="Estado"
-                    maxLength={2}
-                    column="col-md-2"
-                    icon={<i className="fas fa-map-marker-alt"></i>}
-                    errorsInput={errors.state}
-                    register={register}
-                  />
-                </div>
-                <div className="form-row">
-                  <Input
-                    label="Bairro"
-                    name="neighborhood"
-                    type="text"
-                    placeholder="Bairro"
-                    maxLength={254}
-                    column="col-md-4"
-                    icon={<i className="fas fa-map-marker-alt"></i>}
-                    errorsInput={errors.neighborhood}
-                    register={register}
-                  />
-                  <Input
-                    label="Rua"
-                    name="street"
-                    type="text"
-                    placeholder="Nome da Rua"
-                    maxLength={254}
-                    column="col-md-4"
-                    icon={<i className="fas fa-map-marker-alt"></i>}
-                    errorsInput={errors.street}
-                    register={register}
-                  />
-                  <Input
-                    label="Número"
-                    name="streetNumber"
-                    type="text"
-                    placeholder="Número"
-                    maxLength={64}
-                    column="col-md-4"
-                    icon={<i className="fas fa-map-marker-alt"></i>}
-                    errorsInput={errors.streetNumber}
-                    register={register}
-                  />
-                </div>
-                <div className="form-group row ml-0">
-                  <Link
-                    className="text-reset"
-                    to={routes.updatePassword}
-                    id="updatePassword"
-                  >
-                    Clique aqui se quiser atualizar a senha
-                  </Link>
-                </div>
-                <div className="form-group row ml-0">
-                  {displayErrorMessage && (
-                    <div className="invalid-feedback mb-3 d-block">
-                      {errorMessage}
-                    </div>
-                  )}
-                  <button
-                    type="submit"
-                    className="btn btn-default"
-                    id="atualizar"
-                  >
-                    <ButtonSubmit />
-                  </button>
-                </div>
-              </form>
+          {loadingPage ? (
+            <LoadingComponent />
+          ) : (
+            <div className="row">
+              <div className="col-lg-8">
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <div className="form-row">
+                    <Input
+                      label="Nome da ONG"
+                      name="name"
+                      type="text"
+                      placeholder="Nome"
+                      maxLength={80}
+                      column="col-md-6"
+                      icon={<i className="fas fa-user"></i>}
+                      errorsInput={errors.name}
+                      register={register}
+                    />
+                    <Input
+                      label="Email"
+                      name="email"
+                      type="email"
+                      placeholder="email@email.com"
+                      maxLength={254}
+                      column="col-md-6"
+                      icon={<i className="fas fa-envelope"></i>}
+                      errorsInput={errors.email}
+                      register={register}
+                    />
+                  </div>
+                  <div className="form-row">
+                    <InputMask
+                      label="Whatsapp"
+                      name="whatsapp"
+                      type="text"
+                      placeholder="(41) 99999-9999"
+                      maxLength={15}
+                      column="col-md-4"
+                      icon={<i className="fas fa-phone-alt"></i>}
+                      errorsInput={errors.whatsapp}
+                      control={control}
+                      mask={whatsappMask}
+                    />
+                    <InputMask
+                      label="CEP"
+                      name="cep"
+                      type="text"
+                      placeholder="00000-000"
+                      maxLength={9}
+                      column="col-md-2"
+                      icon={<i className="fas fa-map-marker-alt"></i>}
+                      errorsInput={errors.cep}
+                      control={control}
+                      mask={[
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        "-",
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                      ]}
+                      onBlur={handleCep}
+                    />
+                    <Input
+                      label="Cidade"
+                      name="city"
+                      type="text"
+                      placeholder="Cidade"
+                      maxLength={64}
+                      column="col-md-4"
+                      icon={<i className="fas fa-map-marker-alt"></i>}
+                      errorsInput={errors.city}
+                      register={register}
+                    />
+                    <Input
+                      label="Estado"
+                      name="state"
+                      type="text"
+                      placeholder="Estado"
+                      maxLength={2}
+                      column="col-md-2"
+                      icon={<i className="fas fa-map-marker-alt"></i>}
+                      errorsInput={errors.state}
+                      register={register}
+                    />
+                  </div>
+                  <div className="form-row">
+                    <Input
+                      label="Bairro"
+                      name="neighborhood"
+                      type="text"
+                      placeholder="Bairro"
+                      maxLength={254}
+                      column="col-md-4"
+                      icon={<i className="fas fa-map-marker-alt"></i>}
+                      errorsInput={errors.neighborhood}
+                      register={register}
+                    />
+                    <Input
+                      label="Rua"
+                      name="street"
+                      type="text"
+                      placeholder="Nome da Rua"
+                      maxLength={254}
+                      column="col-md-4"
+                      icon={<i className="fas fa-map-marker-alt"></i>}
+                      errorsInput={errors.street}
+                      register={register}
+                    />
+                    <Input
+                      label="Número"
+                      name="streetNumber"
+                      type="text"
+                      placeholder="Número"
+                      maxLength={64}
+                      column="col-md-4"
+                      icon={<i className="fas fa-map-marker-alt"></i>}
+                      errorsInput={errors.streetNumber}
+                      register={register}
+                    />
+                  </div>
+                  <div className="form-group row ml-0">
+                    <Link
+                      className="text-reset"
+                      to={routes.updatePassword}
+                      id="updatePassword"
+                    >
+                      Clique aqui se quiser atualizar a senha
+                    </Link>
+                  </div>
+                  <div className="form-group row ml-0">
+                    {displayErrorMessage && (
+                      <div className="invalid-feedback mb-3 d-block">
+                        {errorMessage}
+                      </div>
+                    )}
+                    <button
+                      type="submit"
+                      className="btn btn-default"
+                      id="atualizar"
+                    >
+                      <ButtonSubmit />
+                    </button>
+                  </div>
+                </form>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </>

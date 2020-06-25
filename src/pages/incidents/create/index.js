@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
-import routes from "~/constants/routes.js";
+import FirebaseContext from "~/services/firebase";
 
-import api from "~/services/api";
+import Api from "~/services/api";
+
+import routes from "~/constants/routes.js";
 
 import Header from "~/components/app/header";
 import Input from "~/components/forms/input";
@@ -39,9 +41,13 @@ export default function NewIncident() {
 
   const [errorMessage, setErrorMessage] = useState("");
   const [displayErrorMessage, setDisplayErrorMessage] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loadingSubmit, setLoadingSubmit] = useState(false);
 
   const history = useHistory();
+
+  const { firebase } = useContext(FirebaseContext);
+
+  const api = Api(firebase);
 
   function handleDigits(event) {
     var temp = event.target.value;
@@ -54,20 +60,20 @@ export default function NewIncident() {
 
   async function onSubmit(data) {
     try {
-      setLoading(true);
+      setLoadingSubmit(true);
       setDisplayErrorMessage(false);
       await api.post("incidents", data);
 
       history.push(String(routes.profile));
     } catch (error) {
-      setLoading(false);
+      setLoadingSubmit(false);
       setDisplayErrorMessage(true);
       setErrorMessage("Erro ao cadastrar o caso.");
     }
   }
 
   const ButtonSubmit = () => {
-    if (loading) {
+    if (loadingSubmit) {
       return (
         <span>
           AGUARDE <i className="fa fa-spinner fa-spin fa-1x fa-fw" />

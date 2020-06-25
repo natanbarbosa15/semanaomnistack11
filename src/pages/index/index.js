@@ -28,10 +28,7 @@ export default function Index() {
             </div>
           </div>
           <div className="row d-flex justify-content-start ml-3 mt-3">
-            <Link
-              to={routes.incidentsAll}
-              className="btn btn-lg w-75 btn-default"
-            >
+            <Link to={routes.incidents} className="btn btn-lg w-75 btn-default">
               VER CASOS
             </Link>
           </div>
@@ -43,6 +40,11 @@ export default function Index() {
           <div className="row d-flex justify-content-start ml-3 mt-3">
             <Link to={routes.register} className="btn btn-lg w-75 btn-default">
               CADASTRO
+            </Link>
+          </div>
+          <div className="row d-flex justify-content-start ml-3 mt-3">
+            <Link to={routes.about} className="btn btn-lg w-75 btn-default">
+              TUTORIAL
             </Link>
           </div>
           <div className="row d-flex justify-content-start ml-3 mt-3">

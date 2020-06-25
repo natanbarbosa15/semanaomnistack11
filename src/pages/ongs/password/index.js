@@ -4,11 +4,8 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
 import FirebaseContext from "~/services/firebase";
-import AuthContext from "~/services/session";
 
 import routes from "~/constants/routes.js";
-
-import { login } from "~/services/auth";
 
 import Header from "~/components/app/header";
 
@@ -45,44 +42,44 @@ export default function UpdatePassword() {
 
   const [errorMessage, setErrorMessage] = useState("");
   const [displayErrorMessage, setDisplayErrorMessage] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loadingSubmit, setLoadingSubmit] = useState(false);
 
-  const firebase = useContext(FirebaseContext);
-  const { handleLogout } = useContext(AuthContext);
+  const { firebase } = useContext(FirebaseContext);
 
   const history = useHistory();
 
   async function onSubmit(data) {
     try {
-      setLoading(true);
+      setLoadingSubmit(true);
       setDisplayErrorMessage(false);
 
       const { email } = await firebase.getCurrentUser();
-      const user = await login(email, data.oldPassword, firebase);
+      const user = await firebase.signInWithEmailAndPassword(
+        email,
+        data.oldPassword
+      );
       if (user) {
         firebase.passwordUpdate(data.password);
 
         firebase.signOut();
 
-        handleLogout();
-
         localStorage.clear();
 
         history.push(String(routes.login));
       } else {
-        setLoading(false);
+        setLoadingSubmit(false);
         setDisplayErrorMessage(true);
         setErrorMessage("Senha inválida.");
       }
     } catch (error) {
-      setLoading(false);
+      setLoadingSubmit(false);
       setDisplayErrorMessage(true);
       setErrorMessage("Erro ao atualizar a senha.");
     }
   }
 
   const ButtonSubmit = () => {
-    if (loading) {
+    if (loadingSubmit) {
       return (
         <span>
           AGUARDE <i className="fa fa-spinner fa-spin fa-1x fa-fw" />

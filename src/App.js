@@ -4,13 +4,10 @@ import Routes from "./routes";
 import "./global.css";
 
 import { FirebaseProvider } from "./services/firebase";
-import { AuthProvider } from "./services/session";
 
 const App = () => (
   <FirebaseProvider>
-    <AuthProvider>
-      <Routes />
-    </AuthProvider>
+    <Routes />
   </FirebaseProvider>
 );
 export default App;

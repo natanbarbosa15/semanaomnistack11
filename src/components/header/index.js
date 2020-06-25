@@ -1,31 +1,11 @@
-import React, { useContext } from "react";
-import { Link, useHistory } from "react-router-dom";
+import React from "react";
+import { Link } from "react-router-dom";
 
 import routes from "~/constants/routes";
-
-import FirebaseContext from "~/services/firebase";
 
 import imgLogo from "~/assets/images/logo.svg";
 
 const Header = () => {
-  const { firebase, setLogout } = useContext(FirebaseContext);
-
-  const history = useHistory();
-
-  async function logout() {
-    try {
-      firebase.signOut();
-
-      localStorage.clear();
-
-      setLogout();
-
-      history.push(String(routes.home));
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   return (
     <header className="sticky-top bg-light">
       <nav className="navbar navbar-expand-sm navbar-light font-weight-bold ml-4 mr-4">
@@ -50,37 +30,45 @@ const Header = () => {
         <div className="collapse navbar-collapse" id="collapsibleNavId">
           <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
             <li className="nav-item">
-              <Link className="nav-link" id="home" to={routes.profile}>
+              <Link className="nav-link" id="home" to={routes.home}>
                 Home
               </Link>
             </li>
             <li className="nav-item">
-              <Link
-                className="nav-link"
-                id="newIncident"
-                to={routes.newIncident}
-              >
-                Cadastrar novo caso
+              <Link className="nav-link" id="incidents" to={routes.incidents}>
+                Casos
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" id="login" to={routes.login}>
+                Login
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" id="register" to={routes.register}>
+                Cadastro
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" id="about" to={routes.about}>
+                Sobre
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" id="useterms" to={routes.useTerms}>
+                Termos de Uso
               </Link>
             </li>
             <li className="nav-item">
               <Link
                 className="nav-link"
-                id="updateProfile"
-                to={routes.updateProfile}
+                id="privacyterms"
+                to={routes.privacyTerms}
               >
-                Conta
+                Política de Privacidade
               </Link>
             </li>
           </ul>
-          <button
-            onClick={logout}
-            id="logout"
-            type="button"
-            className="btn btn-link text-reset"
-          >
-            Sair
-          </button>
         </div>
       </nav>
     </header>
