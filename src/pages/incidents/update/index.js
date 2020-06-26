@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import Axios from "axios";
 import * as yup from "yup";
 
 import FirebaseContext from "~/services/firebase";
@@ -51,16 +52,34 @@ export default function UpdateIncident() {
 
   const { firebase } = useContext(FirebaseContext);
 
+  const cancelAxios = Axios.CancelToken.source();
   const api = Api(firebase);
 
   useEffect(() => {
-    api.get(`incidents/${id}`).then((response) => {
-      setValue("title", response.data.title);
-      setValue("description", response.data.description);
-      setValue("value", Number(response.data.value));
-      setLoadingPage(false);
-    });
-  }, [id, setValue, loadingPage, api]);
+    async function getData() {
+      try {
+        const response = await api.get(`incidents/${id}`, {
+          cancelToken: cancelAxios.token,
+        });
+        setValue("title", response.data.title);
+        setValue("description", response.data.description);
+        setValue("value", Number(response.data.value));
+        setLoadingPage(false);
+      } catch (error) {
+        if (Axios.isCancel(error)) {
+        } else {
+          throw error;
+        }
+      }
+    }
+
+    getData();
+
+    return () => {
+      cancelAxios.cancel();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingPage]);
 
   function handleDigits(event) {
     var temp = event.target.value;
@@ -81,7 +100,7 @@ export default function UpdateIncident() {
     } catch (error) {
       setLoadingSubmit(false);
       setDisplayErrorMessage(true);
-      setErrorMessage("Erro ao cadastrar o caso.");
+      setErrorMessage("Erro ao atualizar o caso.");
     }
   }
 

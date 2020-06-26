@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useHistory, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import Axios from "axios";
 import cep from "cep-promise";
 import * as yup from "yup";
 
@@ -69,6 +70,7 @@ export default function UpdateProfile() {
 
   const { firebase } = useContext(FirebaseContext);
 
+  const cancelAxios = Axios.CancelToken.source();
   const api = Api(firebase);
 
   useEffect(() => {
@@ -83,8 +85,11 @@ export default function UpdateProfile() {
       return whatsapp;
     }
     async function getUser() {
-      const { id } = await firebase.getCurrentUser();
-      api.get(`ongs/${id}`).then((response) => {
+      try {
+        const { id } = await firebase.getCurrentUser();
+        const response = await api.get(`ongs/${id}`, {
+          cancelToken: cancelAxios.token,
+        });
         setValue("name", response.data.name, true);
         setValue("email", response.data.email, true);
         setValue("whatsapp", handleWhatsappData(response.data.whatsapp), true);
@@ -95,10 +100,20 @@ export default function UpdateProfile() {
         setValue("street", response.data.street, true);
         setValue("streetNumber", response.data.streetNumber, true);
         setLoadingPage(false);
-      });
+      } catch (error) {
+        if (Axios.isCancel(error)) {
+        } else {
+          throw error;
+        }
+      }
     }
     getUser();
-  }, [firebase, setValue, loadingPage, api]);
+
+    return () => {
+      cancelAxios.cancel();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingPage]);
 
   function whatsappMask(value) {
     let numbers = value.match(/\d/g);
@@ -185,6 +200,15 @@ export default function UpdateProfile() {
       setDisplayErrorMessage(true);
       setErrorMessage(error.response.data.message);
     }
+  }
+
+  async function deleteOng() {
+    await api.delete("ongs");
+    firebase.signOut();
+
+    localStorage.clear();
+
+    history.push(String(routes.login));
   }
 
   const ButtonSubmit = () => {
@@ -336,6 +360,66 @@ export default function UpdateProfile() {
                     >
                       Clique aqui se quiser atualizar a senha
                     </Link>
+                  </div>
+                  <div
+                    className="modal fade"
+                    id="deleteOngModal"
+                    tabIndex="-1"
+                    role="dialog"
+                    aria-labelledby="deleteOngModal"
+                    aria-hidden="true"
+                  >
+                    <div className="modal-dialog" role="document">
+                      <div className="modal-content">
+                        <div className="modal-header">
+                          <h5 className="modal-title" id="deleteOngModal">
+                            Excluir conta
+                          </h5>
+                          <button
+                            type="button"
+                            className="close"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                          >
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div className="modal-body">
+                          <p>
+                            Tem certeza que deseja excluir sua conta? Todos os
+                            casos cadastrados também serão excluídos.
+                          </p>
+                        </div>
+                        <div className="modal-footer">
+                          <button
+                            type="button"
+                            className="btn btn-secondary"
+                            data-dismiss="modal"
+                          >
+                            Não
+                          </button>
+                          <button
+                            type="button"
+                            className="btn btn-default"
+                            data-dismiss="modal"
+                            onClick={deleteOng}
+                          >
+                            Sim
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="form-group row ml-0">
+                    <button
+                      type="button"
+                      className="text-danger btn btn-link"
+                      data-toggle="modal"
+                      data-target="#deleteOngModal"
+                      id="deleteOng"
+                    >
+                      Clique aqui se quiser deletar sua conta
+                    </button>
                   </div>
                   <div className="form-group row ml-0">
                     {displayErrorMessage && (

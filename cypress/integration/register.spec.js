@@ -41,6 +41,9 @@ describe("User register test", () => {
 
     cy.wait("@register");
 
-    cy.url().should("eq", String(Cypress.config().baseUrl + "/"));
+    cy.url().should(
+      "eq",
+      String(Cypress.config().baseUrl + String(routes.login))
+    );
   });
 });

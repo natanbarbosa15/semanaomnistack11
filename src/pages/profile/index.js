@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { FiTrash2, FiEdit } from "react-icons/fi";
+import Axios from "axios";
 
 import FirebaseContext from "~/services/firebase";
 
@@ -15,36 +16,44 @@ export default function Profile() {
   const [incidents, setIncidents] = useState([]);
   const [ongName, setOngName] = useState("");
   const [loadingPage, setLoadingPage] = useState(true);
-  const [isActive, setIsActive] = useState(true);
 
   const { firebase } = useContext(FirebaseContext);
 
+  const cancelAxios = Axios.CancelToken.source();
   const api = Api(firebase);
 
   useEffect(() => {
-    setIsActive(true);
-
     async function getUser() {
-      if (isActive) {
-        const { name } = await firebase.getCurrentUser();
-        setOngName(name);
-        getIncidents();
-        setLoadingPage(false);
-      }
+      const { name } = await firebase.getCurrentUser();
+      setOngName(name);
+      getIncidents();
+      setLoadingPage(false);
     }
 
-    function getIncidents() {
-      if (isActive) {
-        api.get("profile").then((response) => setIncidents(response.data));
+    async function getIncidents() {
+      try {
+        const response = await api.get("profile", {
+          cancelToken: cancelAxios.token,
+        });
+        setIncidents(response.data);
+      } catch (error) {
+        if (Axios.isCancel(error)) {
+        } else {
+          throw error;
+        }
       }
     }
 
     getUser();
 
+    const interval = setInterval(getIncidents, 2000);
+
     return () => {
-      setIsActive(false);
+      cancelAxios.cancel();
+      clearInterval(interval);
     };
-  }, [incidents, firebase, loadingPage, api, isActive]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function handleDeleteIncident(id) {
     try {

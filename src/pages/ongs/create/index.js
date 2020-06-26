@@ -4,12 +4,13 @@ import { useForm } from "react-hook-form";
 import cep from "cep-promise";
 import * as yup from "yup";
 
+import Api from "~/services/api";
+
 import routes from "~/constants/routes.js";
 
 import Input from "~/components/forms/input";
 import InputMask from "~/components/forms/inputMask";
 
-import api from "~/services/api";
 import Header from "~/components/header";
 
 yup.setLocale({
@@ -72,6 +73,8 @@ export default function Register() {
   const [errorMessage, setErrorMessage] = useState("");
   const [displayErrorMessage, setDisplayErrorMessage] = useState(false);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
+
+  const api = Api();
 
   const history = useHistory();
 

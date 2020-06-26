@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Axios from "axios";
 
 import Api from "~/services/api";
 
@@ -8,29 +9,34 @@ import LoadingComponent from "~/components/loading";
 export default function Incidents() {
   const [incidents, setIncidents] = useState([]);
   const [loadingPage, setLoadingPage] = useState(true);
-  const [isActive, setIsActive] = useState(true);
 
+  const cancelAxios = Axios.CancelToken.source();
   const api = Api();
 
   useEffect(() => {
-    setIsActive(true);
-
-    function getIncidents() {
-      if (isActive) {
-        api.get("incidents").then((response) => {
-          setIncidents(response.data);
-          setLoadingPage(false);
+    async function getIncidents() {
+      try {
+        const response = await api.get("incidents", {
+          cancelToken: cancelAxios.token,
         });
+        setIncidents(response.data);
+        setLoadingPage(false);
+      } catch (error) {
+        if (Axios.isCancel(error)) {
+        } else {
+          throw error;
+        }
       }
     }
 
     const interval = setInterval(getIncidents, 2000);
 
     return () => {
+      cancelAxios.cancel();
       clearInterval(interval);
-      setIsActive(false);
     };
-  }, [api, incidents, isActive, loadingPage]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
