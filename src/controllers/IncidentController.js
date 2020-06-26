@@ -64,18 +64,6 @@ module.exports = {
   async read(request, response) {
     try {
       const { id } = request.params;
-      const user = await getCurrentUser(request);
-      if (!user) {
-        return response.status(403).send("Forbidden");
-      }
-      const ong = await connection("ongs")
-        .select("*")
-        .where("id", user.id)
-        .first();
-      if (!ong) {
-        return response.status(403).send("Forbidden");
-      }
-      const ong_id = String(ong.id);
 
       const incident = await connection("incidents")
         .select([
@@ -96,12 +84,6 @@ module.exports = {
 
       if (!incident) {
         return response.status(404).json({ message: "Not found." });
-      }
-
-      if (incident.ong_id !== ong_id) {
-        return response
-          .status(401)
-          .json({ message: "Operation not permitted." });
       }
 
       return response.json(incident);

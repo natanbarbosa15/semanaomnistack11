@@ -116,14 +116,10 @@ describe("ONG, Session, Profile and Incidents", () => {
   it("should be able to read a Incident", async () => {
     const ongTest = await connection("ongs").select("*").first();
     const incidentTest = await connection("incidents").select("*").first();
-    const token = Buffer.from(
-      JSON.stringify({ id: String(ongTest.id) }),
-      "binary"
-    ).toString("base64");
 
-    const response = await request(app)
-      .get(`${basePath}/incidents/${ongTest.id}`)
-      .set({ "x-endpoint-api-userinfo": token });
+    const response = await request(app).get(
+      `${basePath}/incidents/${incidentTest.id}`
+    );
 
     expect(response.statusCode).toBe(200);
     expect(response.body).toEqual({
