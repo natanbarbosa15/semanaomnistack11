@@ -1,5 +1,7 @@
 # Semana Omnistack 11
 
+O projeto Be The Hero foi criado pela Rocketseat na 11º edição da Semana Omnistack. Tendo o objetivo de criar um sistema Web e Mobile para ajudar ONGs (Organizações Não Governamentais) mostrando os casos que necessitam de ajuda.
+
 Versão Online: https://be-the-hero-275300.web.app/
 
 Instruções de como utilizar o código-fonte estão no README.md de cada Branch.
