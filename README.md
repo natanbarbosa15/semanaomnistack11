@@ -1,17 +1,19 @@
 # Semana Omnistack 11
 
-Versão Online: https://behero-frontend.herokuapp.com
+Versão Online: https://be-the-hero-275300.web.app/
 
-Arquivos do meu desenvolvimento nas aulas da Semana Omnistack 11 da <a href="https://rocketseat.com.br/">Rocketseat <img src="https://podtag.com.br/static/rocketseat.png" width="64" height="64" alt="Rocketseat"></a>
+## Branch Master
 
-## Back-End
+Essa Branch Master contém o código-fonte original, criado durante a Semana Omnistack 11. Melhorias e incrementos no projeto estão disponíveis em Branchs individuais conforme abaixo.
 
-Utilizando o Framework NodeJS <img src="https://d1q6f0aelx0por.cloudfront.net/product-logos/a8957077-bbcd-41cc-b6d0-2924a1492e99-node.png" width="64" height="64" alt="NodeJS">
+## Branch "backend"
 
-## Front-End
+Contém o recente código-fonte do Back-End do projeto utilizando NodeJS.
 
-Utilizando o Framework React <img src="https://miro.medium.com/fit/c/256/256/0*5q57jb1AO2KqhdTZ.png" width="48" height="48" alt="React">
+## Branch "frontend"
 
-## Mobile
+Contém o recente código-fonte do Front-End do projeto utilizando ReactJS.
 
-Utilizando o Framework React Native <img src="https://miro.medium.com/fit/c/256/256/0*5q57jb1AO2KqhdTZ.png" width="48" height="48" alt="React Native">
+## Branch "mobile"
+
+Contém o recente código-fonte Mobile do projeto utilizando React Native e Expo.
