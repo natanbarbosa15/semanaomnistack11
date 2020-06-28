@@ -24,8 +24,9 @@ npm install
 
 É necessário configurar as variáveis de ambiente da URL de conexão com Back-End (API), do Firebase e do Google Maps Embed API que serão utilizadas pela ReactJS. Há dois arquivos disponíveis o de desenvolvimento e de produção.
 
-![Tutorial Firebase](https://firebase.google.com/docs/web/setup?hl=pt-br#aplicativos-node.js)
-![Tutorial Google Maps Embed](https://developers.google.com/maps/documentation/embed/get-api-key)
+<a href="https://firebase.google.com/docs/web/setup?hl=pt-br#aplicativos-node.js" target="_blank">Tutorial Firebase</a>
+
+<a href="https://developers.google.com/maps/documentation/embed/get-api-key" target="_blank">Tutorial Google Maps Embed</a>
 
 ## 3. Executar na máquina local
 
@@ -82,10 +83,15 @@ Irá abrir a tela do Cypress, mande executar todos os testes, eles já estão na
 ## Informações Adicionais
 
 Esse projeto utiliza as seguintes relevantes bibliotecas do NodeJS no projeto:
+
 ![cep-promise](https://github.com/filipedeschamps/cep-promise)
+
 ![firebase](https://github.com/firebase/firebase-js-sdk)
-![bootstrap](https://getbootstrap.com/docs/4.0/getting-started/download/#npm)
+
+<a href="https://getbootstrap.com/docs/4.0/getting-started/download/#npm" target="_blank">bootstrap</a>
+
 ![react-app-rewired](https://github.com/timarney/react-app-rewired)
+
 ![customize-cra](https://github.com/arackaf/customize-cra)
 
 E outras bibliotecas, consulte o arquivo "package.json".
