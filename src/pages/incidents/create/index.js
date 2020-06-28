@@ -87,70 +87,64 @@ export default function NewIncident() {
   return (
     <>
       <Header />
-      <div className="container d-flex align-content-center justify-content-center mt-5">
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-md">
-              <section>
-                <h1>Cadastrar novo caso</h1>
-                <p>
-                  Descreva o caso detalhadamente para encontrar um herói para
-                  resolver.
-                </p>
-              </section>
-            </div>
-            <div className="col-md">
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="form-row">
-                  <Input
-                    label="Título do caso"
-                    name="title"
-                    type="text"
-                    placeholder="Título"
-                    maxLength={80}
-                    column="col-md-6"
-                    errorsInput={errors.title}
-                    register={register}
-                  />
+      <div className="container mt-5">
+        <div className="row">
+          <div className="col-lg-6">
+            <section>
+              <h1>Cadastrar novo caso</h1>
+              <p>
+                Descreva o caso detalhadamente para encontrar um herói para
+                resolver.
+              </p>
+            </section>
+          </div>
+          <div className="col-lg-6">
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="form-row">
+                <Input
+                  label="Título do caso"
+                  name="title"
+                  type="text"
+                  placeholder="Título"
+                  maxLength={80}
+                  column="col-md-6"
+                  errorsInput={errors.title}
+                  register={register}
+                />
+              </div>
+              <div className="form-row">
+                <TextArea
+                  label="Descrição do caso"
+                  name="description"
+                  placeholder="Descrição"
+                  maxLength={5242880}
+                  column="col-md-6"
+                  errorsInput={errors.description}
+                  register={register}
+                />
+              </div>
+              <div className="form-row">
+                <Input
+                  label="Valor em reais"
+                  name="value"
+                  type="text"
+                  placeholder="Valor"
+                  maxLength={254}
+                  column="col-md-6"
+                  errorsInput={errors.value}
+                  register={register}
+                  handleChange={handleDigits}
+                />
+              </div>
+              {displayErrorMessage && (
+                <div className="invalid-feedback mb-3 d-block">
+                  {errorMessage}
                 </div>
-                <div className="form-row">
-                  <TextArea
-                    label="Descrição do caso"
-                    name="description"
-                    placeholder="Descrição"
-                    maxLength={5242880}
-                    column="col-md-6"
-                    errorsInput={errors.description}
-                    register={register}
-                  />
-                </div>
-                <div className="form-row">
-                  <Input
-                    label="Valor em reais"
-                    name="value"
-                    type="text"
-                    placeholder="Valor"
-                    maxLength={254}
-                    column="col-md-6"
-                    errorsInput={errors.value}
-                    register={register}
-                    handleChange={handleDigits}
-                  />
-                </div>
-                {displayErrorMessage && (
-                  <div className="invalid-feedback mb-3 d-block">
-                    {errorMessage}
-                  </div>
-                )}
-                <button
-                  className="btn btn-default"
-                  id="cadastrar"
-                  type="submit"
-                >
-                  <ButtonSubmit />
-                </button>
-              </form>
-            </div>
+              )}
+              <button className="btn btn-default" id="cadastrar" type="submit">
+                <ButtonSubmit />
+              </button>
+            </form>
           </div>
         </div>
       </div>

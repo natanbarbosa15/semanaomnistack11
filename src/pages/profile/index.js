@@ -68,83 +68,79 @@ export default function Profile() {
   return (
     <>
       <Header />
-      <div className="container">
-        <div className="container-fluid pt-3">
-          {loadingPage ? (
-            <LoadingComponent />
-          ) : (
-            <>
-              <div className="row mt-3">
-                <div className="col-md">
-                  <p className="h3">Bem vindo(a), {ongName}</p>
-                </div>
+      <div className="container mt-3">
+        {loadingPage ? (
+          <LoadingComponent />
+        ) : (
+          <>
+            <div className="row mt-3">
+              <div className="col-md">
+                <p className="h3">Bem vindo(a), {ongName}</p>
               </div>
+            </div>
+            <div className="row mt-2">
+              <div className="col-md">
+                <p className="h1">Casos cadastrados</p>
+              </div>
+            </div>
+            {incidents.length === 0 ? (
               <div className="row mt-2">
                 <div className="col-md">
-                  <p className="h1">Casos cadastrados</p>
+                  <p className="h3">Não há casos cadastrados.</p>
                 </div>
               </div>
-              {incidents.length === 0 ? (
-                <div className="row mt-2">
-                  <div className="col-md">
-                    <p className="h3">Não há casos cadastrados.</p>
-                  </div>
-                </div>
-              ) : (
-                <div className="row mt-2">
-                  {incidents.map((incident) => (
-                    <div className="col-md-6 mt-3 mb-3" key={incident.id}>
-                      <div className="card flex-md-row box-shadow border border-white rounded">
-                        <div className="card-body d-flex flex-column align-items-start ml-2 mt-2 mb-3">
-                          <p className="card-subtitle d-flex justify-content-between w-100">
-                            <strong>Caso:</strong>
-                            <span className="justify-content-between">
-                              <Link
-                                to={routes.updateIncident + `/${incident.id}`}
-                                id="updateIncident"
-                              >
-                                <FiEdit size={20} color="#A8A8B3" />
-                              </Link>
-                              <button
-                                onClick={() =>
-                                  handleDeleteIncident(incident.id)
-                                }
-                                type="button"
-                                id="delete"
-                                className="btn bg-transparent"
-                                title="Excluir"
-                              >
-                                <FiTrash2 size={20} color="#A8A8B3" />
-                              </button>
-                            </span>
-                          </p>
-                          <p className="card-text" id="title">
-                            {incident.title}
-                          </p>
-                          <p className="card-subtitle">
-                            <strong>Descrição:</strong>
-                          </p>
-                          <p className="card-text mt-2" id="description">
-                            {incident.description}
-                          </p>
-                          <p className="card-subtitle">
-                            <strong>Valor:</strong>
-                          </p>
-                          <p className="card-text mt-2" id="value">
-                            {Intl.NumberFormat("pt-BR", {
-                              style: "currency",
-                              currency: "BRL",
-                            }).format(incident.value)}
-                          </p>
-                        </div>
+            ) : (
+              <div className="row mt-2">
+                {incidents.map((incident) => (
+                  <div className="col-md-6 mt-3 mb-3" key={incident.id}>
+                    <div className="card flex-md-row box-shadow border border-white rounded">
+                      <div className="card-body d-flex flex-column align-items-start ml-2 mt-2 mb-3">
+                        <p className="card-subtitle d-flex justify-content-between w-100">
+                          <strong>Caso:</strong>
+                          <span className="justify-content-between">
+                            <Link
+                              to={routes.updateIncident + `/${incident.id}`}
+                              id="updateIncident"
+                            >
+                              <FiEdit size={20} color="#A8A8B3" />
+                            </Link>
+                            <button
+                              onClick={() => handleDeleteIncident(incident.id)}
+                              type="button"
+                              id="delete"
+                              className="btn bg-transparent"
+                              title="Excluir"
+                            >
+                              <FiTrash2 size={20} color="#A8A8B3" />
+                            </button>
+                          </span>
+                        </p>
+                        <p className="card-text" id="title">
+                          {incident.title}
+                        </p>
+                        <p className="card-subtitle">
+                          <strong>Descrição:</strong>
+                        </p>
+                        <p className="card-text mt-2" id="description">
+                          {incident.description}
+                        </p>
+                        <p className="card-subtitle">
+                          <strong>Valor:</strong>
+                        </p>
+                        <p className="card-text mt-2" id="value">
+                          {Intl.NumberFormat("pt-BR", {
+                            style: "currency",
+                            currency: "BRL",
+                          }).format(incident.value)}
+                        </p>
                       </div>
                     </div>
-                  ))}
-                </div>
-              )}
-            </>
-          )}
-        </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        )}
       </div>
     </>
   );

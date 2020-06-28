@@ -226,13 +226,18 @@ export default function UpdateProfile() {
   return (
     <>
       <Header />
-      <div className="container d-flex align-content-center justify-content-center mt-5">
-        <div className="container-fluid">
-          {loadingPage ? (
-            <LoadingComponent />
-          ) : (
+      <div className="container mt-3">
+        {loadingPage ? (
+          <LoadingComponent />
+        ) : (
+          <>
             <div className="row">
-              <div className="col-lg-8">
+              <div className="col">
+                <p className="h1">Atualizar conta</p>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-lg">
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <div className="form-row">
                     <Input
@@ -438,8 +443,8 @@ export default function UpdateProfile() {
                 </form>
               </div>
             </div>
-          )}
-        </div>
+          </>
+        )}
       </div>
     </>
   );

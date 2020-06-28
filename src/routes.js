@@ -7,9 +7,11 @@ import FirebaseContext from "./services/firebase";
 
 import Index from "./pages/index";
 import Incidents from "./pages/incidents/index";
+import ReadIncident from "./pages/incidents/read/index.js";
 import Login from "./pages/login";
 import Register from "./pages/ongs/create";
 import About from "./pages/about";
+import Tutorial from "./pages/tutorial";
 import UseTerms from "./pages/useTerms";
 import PrivacyTerms from "./pages/privacyTerms";
 import Profile from "./pages/profile";
@@ -43,10 +45,12 @@ const Routes = () => (
   <BrowserRouter>
     <Switch>
       <Route exact path={routes.home} component={Index} />
-      <Route path={routes.incidents} component={Incidents} />
+      <Route exact path={routes.incidents} component={Incidents} />
+      <Route exact path={routes.incidents + "/:id"} component={ReadIncident} />
       <Route path={routes.login} component={Login} />
       <Route path={routes.register} component={Register} />
       <Route path={routes.about} component={About} />
+      <Route path={routes.tutorial} component={Tutorial} />
       <Route path={routes.useTerms} component={UseTerms} />
       <Route path={routes.privacyTerms} component={PrivacyTerms} />
       <PrivateRoute exact path={routes.profile} component={Profile} />

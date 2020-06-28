@@ -43,7 +43,7 @@ export default function Index() {
             </Link>
           </div>
           <div className="row d-flex justify-content-start ml-3 mt-3">
-            <Link to={routes.about} className="btn btn-lg w-75 btn-default">
+            <Link to={routes.tutorial} className="btn btn-lg w-75 btn-default">
               TUTORIAL
             </Link>
           </div>

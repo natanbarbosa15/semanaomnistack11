@@ -85,75 +85,73 @@ export default function Login() {
     <>
       <Header />
       <div className="container">
-        <div className="container-fluid">
-          <div className="row mt-4 no-gutters">
-            <div className="col-lg-5 ml-lg-5">
-              <div className="row">
-                <div className="col-lg">
-                  <h1 className="h1 font-weight-bold">Faça o seu Login</h1>
-                </div>
+        <div className="row mt-4 no-gutters">
+          <div className="col-lg-5 ml-lg-5">
+            <div className="row">
+              <div className="col-lg">
+                <h1 className="h1 font-weight-bold">Faça o seu Login</h1>
               </div>
-              <div className="row">
-                <div className="col-md-8">
-                  <form onSubmit={handleSubmit(onSubmit)}>
-                    <Input
-                      label="Email"
-                      name="email"
-                      type="email"
-                      placeholder="email@email.com"
-                      maxLength={254}
-                      icon={<i className="fas fa-envelope"></i>}
-                      errorsInput={errors.email}
-                      register={register}
-                    />
-                    <Input
-                      label="Senha"
-                      name="password"
-                      type="password"
-                      placeholder="Senha"
-                      maxLength={16}
-                      icon={<i className="fas fa-lock"></i>}
-                      errorsInput={errors.password}
-                      register={register}
-                    />
-                    {displayErrorMessage && (
-                      <div className="invalid-feedback mb-3 d-block">
-                        {errorMessage}
-                      </div>
-                    )}
-                    <div className="form-group row ml-0">
-                      <button type="submit" className="btn btn-default">
-                        <ButtonSubmit />
-                      </button>
+            </div>
+            <div className="row">
+              <div className="col-md-8">
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <Input
+                    label="Email"
+                    name="email"
+                    type="email"
+                    placeholder="email@email.com"
+                    maxLength={254}
+                    icon={<i className="fas fa-envelope"></i>}
+                    errorsInput={errors.email}
+                    register={register}
+                  />
+                  <Input
+                    label="Senha"
+                    name="password"
+                    type="password"
+                    placeholder="Senha"
+                    maxLength={16}
+                    icon={<i className="fas fa-lock"></i>}
+                    errorsInput={errors.password}
+                    register={register}
+                  />
+                  {displayErrorMessage && (
+                    <div className="invalid-feedback mb-3 d-block">
+                      {errorMessage}
                     </div>
-                  </form>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-lg mr-4 text-justify">
-                  <p>
-                    Não possui cadastro? Realize o cadastro clicando no botão
-                    abaixo.
-                  </p>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-lg">
-                  <Link to={routes.register} className="btn btn-default">
-                    CADASTRO
-                  </Link>
-                </div>
+                  )}
+                  <div className="form-group row ml-0">
+                    <button type="submit" className="btn btn-default">
+                      <ButtonSubmit />
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
-            <div className="col-lg-5 mt-4">
-              {" "}
-              <img
-                src={imgHeroes}
-                className="img-fluid"
-                id="Heroes"
-                alt="Heroes"
-              />{" "}
+            <div className="row">
+              <div className="col-lg mr-4 text-justify">
+                <p>
+                  Não possui cadastro? Realize o cadastro clicando no botão
+                  abaixo.
+                </p>
+              </div>
             </div>
+            <div className="row">
+              <div className="col-lg">
+                <Link to={routes.register} className="btn btn-default">
+                  CADASTRO
+                </Link>
+              </div>
+            </div>
+          </div>
+          <div className="col-lg-5 mt-4">
+            {" "}
+            <img
+              src={imgHeroes}
+              className="img-fluid"
+              id="Heroes"
+              alt="Heroes"
+            />{" "}
           </div>
         </div>
       </div>

@@ -1,38 +1,24 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
-import routes from "~/constants/routes.js";
-
-import imgLogo from "~/assets/images/logo.svg";
+import Header from "~/components/header";
 
 export default function NotFound() {
   return (
-    <div className="container-fluid">
-      <div className="row mt-3 no-gutters">
-        <div className="col-sm-0">
-          <Link to={routes.home} className="btn btn-default icon-fa">
-            <i className="fas fa-arrow-left" />
-          </Link>
-        </div>
-        <div className="col-lg-5 ml-lg-5">
-          <div className="row">
-            <div className="col-lg">
-              {" "}
-              <img
-                src={imgLogo}
-                alt="Logo"
-                className="img-fluid"
-                id="logo"
-              />{" "}
-            </div>
-          </div>
-          <div className="row mt-4">
-            <div className="col-lg">
-              <h1 className="h1 font-weight-bold">Página não encontrada.</h1>
+    <>
+      <Header />
+      <div className="container-fluid">
+        <div className="row mt-3 no-gutters">
+          <div className="col ml-lg-5">
+            <div className="row mt-2">
+              <div className="col-lg">
+                <h1 className="h1 font-weight-bold">
+                  Página não encontrada. (Error 404)
+                </h1>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

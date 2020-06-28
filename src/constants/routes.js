@@ -4,6 +4,7 @@ export default {
   login: "/login",
   register: "/register",
   about: "/about",
+  tutorial: "/tutorial",
   useTerms: "/useterms",
   privacyTerms: "/privacyterms",
   profile: "/app/home",

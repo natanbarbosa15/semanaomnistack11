@@ -93,64 +93,67 @@ export default function UpdatePassword() {
   return (
     <>
       <Header />
-      <div className="container d-flex align-content-center justify-content-center mt-5">
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-lg-8">
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="form-row">
-                  <Input
-                    label="Senha Antiga"
-                    name="oldPassword"
-                    type="password"
-                    placeholder="Senha"
-                    maxLength={16}
-                    column="col-md-6"
-                    icon={<i className="fas fa-lock"></i>}
-                    errorsInput={errors.oldPassword}
-                    register={register}
-                  />
-                </div>
-                <div className="form-row">
-                  <Input
-                    label="Nova Senha"
-                    name="password"
-                    type="password"
-                    placeholder="Senha"
-                    maxLength={16}
-                    column="col-md-6"
-                    icon={<i className="fas fa-lock"></i>}
-                    errorsInput={errors.password}
-                    register={register}
-                  />
-                  <Input
-                    label="Confirmar Senha"
-                    name="confirmPassword"
-                    type="password"
-                    placeholder="Senha"
-                    maxLength={16}
-                    column="col-md-6"
-                    icon={<i className="fas fa-lock"></i>}
-                    errorsInput={errors.confirmPassword}
-                    register={register}
-                  />
-                </div>
-                <div className="form-group row ml-0">
-                  {displayErrorMessage && (
-                    <div className="invalid-feedback mb-3 d-block">
-                      {errorMessage}
-                    </div>
-                  )}
-                  <button
-                    type="submit"
-                    className="btn btn-default"
-                    id="atualizar"
-                  >
-                    <ButtonSubmit />
-                  </button>
-                </div>
-              </form>
-            </div>
+      <div className="container mt-3">
+        <div className="row">
+          <div className="col">
+            <p className="h1">Atualizar senha</p>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-lg-8">
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="form-row">
+                <Input
+                  label="Senha Antiga"
+                  name="oldPassword"
+                  type="password"
+                  placeholder="Senha"
+                  maxLength={16}
+                  column="col-md-6"
+                  icon={<i className="fas fa-lock"></i>}
+                  errorsInput={errors.oldPassword}
+                  register={register}
+                />
+              </div>
+              <div className="form-row">
+                <Input
+                  label="Nova Senha"
+                  name="password"
+                  type="password"
+                  placeholder="Senha"
+                  maxLength={16}
+                  column="col-md-6"
+                  icon={<i className="fas fa-lock"></i>}
+                  errorsInput={errors.password}
+                  register={register}
+                />
+                <Input
+                  label="Confirmar Senha"
+                  name="confirmPassword"
+                  type="password"
+                  placeholder="Senha"
+                  maxLength={16}
+                  column="col-md-6"
+                  icon={<i className="fas fa-lock"></i>}
+                  errorsInput={errors.confirmPassword}
+                  register={register}
+                />
+              </div>
+              <div className="form-group row ml-0">
+                {displayErrorMessage && (
+                  <div className="invalid-feedback mb-3 d-block">
+                    {errorMessage}
+                  </div>
+                )}
+                <button
+                  type="submit"
+                  className="btn btn-default"
+                  id="atualizar"
+                >
+                  <ButtonSubmit />
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>

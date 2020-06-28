@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import Axios from "axios";
 import * as yup from "yup";
@@ -41,6 +41,7 @@ export default function UpdateIncident() {
     },
   });
 
+  const [incident, setIncident] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [displayErrorMessage, setDisplayErrorMessage] = useState(false);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
@@ -61,13 +62,17 @@ export default function UpdateIncident() {
         const response = await api.get(`incidents/${id}`, {
           cancelToken: cancelAxios.token,
         });
-        setValue("title", response.data.title);
-        setValue("description", response.data.description);
-        setValue("value", Number(response.data.value));
+        if (response.status === 200) {
+          setValue("title", response.data.title);
+          setValue("description", response.data.description);
+          setValue("value", Number(response.data.value));
+          setIncident(response.data);
+        }
         setLoadingPage(false);
       } catch (error) {
         if (Axios.isCancel(error)) {
         } else {
+          setLoadingPage(false);
           throw error;
         }
       }
@@ -119,11 +124,32 @@ export default function UpdateIncident() {
   return (
     <>
       <Header />
-      <div className="container d-flex align-content-center justify-content-center mt-5">
-        <div className="container-fluid">
-          {loadingPage ? (
-            <LoadingComponent />
-          ) : (
+      <div className="container mt-5">
+        {loadingPage ? (
+          <LoadingComponent />
+        ) : !incident ? (
+          <div className="row">
+            <div className="col-0 ml-3">
+              <Link to={routes.profile} className="btn btn-default icon-fa">
+                <i className="fas fa-arrow-left" />
+              </Link>
+            </div>
+            <div className="col-auto">
+              <p className="h1 text-danger">Erro ao carregar o caso.</p>
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className="row">
+              <div className="col-0 ml-3">
+                <Link to={routes.profile} className="btn btn-default icon-fa">
+                  <i className="fas fa-arrow-left" />
+                </Link>
+              </div>
+              <div className="col-auto">
+                <p className="h1">Atualizar o caso "{incident.title}"</p>
+              </div>
+            </div>
             <div className="row">
               <div className="col-md">
                 <form onSubmit={handleSubmit(onSubmit)}>
@@ -178,8 +204,8 @@ export default function UpdateIncident() {
                 </form>
               </div>
             </div>
-          )}
-        </div>
+          </>
+        )}
       </div>
     </>
   );
