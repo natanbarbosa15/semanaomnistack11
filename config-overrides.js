@@ -10,8 +10,12 @@ const cspConfigPolicy = {
   "style-src": ["'self'", "'unsafe-inline'", "https://*.googleapis.com"],
   "img-src": ["'self'", "data:"],
   "connect-src": [
+    "'self'",
     "https://gateway-hio7rdwdxq-uc.a.run.app",
     "https://*.googleapis.com",
+    "https://proxier.now.sh",
+    "https://apps.correios.com.br",
+    "https://viacep.com.br",
   ],
   "font-src": ["'self'", "https://*.gstatic.com"],
   "frame-src": ["'self'", "https://*.google.com", "https://*.iubenda.com"],
