@@ -65,6 +65,7 @@ export default function UpdateProfile() {
   const [displayErrorMessage, setDisplayErrorMessage] = useState(false);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
   const [loadingPage, setLoadingPage] = useState(true);
+  const [errorLoading, setErrorLoading] = useState(false);
 
   const history = useHistory();
 
@@ -103,6 +104,8 @@ export default function UpdateProfile() {
       } catch (error) {
         if (Axios.isCancel(error)) {
         } else {
+          setErrorLoading(true);
+          setLoadingPage(false);
           throw error;
         }
       }
@@ -197,18 +200,27 @@ export default function UpdateProfile() {
       }
     } catch (error) {
       setLoadingSubmit(false);
+      if (error.response && error.response.data.message) {
+        setErrorMessage(error.response.data.message);
+      } else {
+        setErrorMessage("Erro ao atualizar conta.");
+      }
       setDisplayErrorMessage(true);
-      setErrorMessage(error.response.data.message);
     }
   }
 
   async function deleteOng() {
-    await api.delete("ongs");
-    firebase.signOut();
+    try {
+      await api.delete("ongs");
 
-    localStorage.clear();
+      firebase.signOut();
 
-    history.push(String(routes.login));
+      localStorage.clear();
+
+      history.push(String(routes.login));
+    } catch (error) {
+      alert("Erro ao excluir conta.");
+    }
   }
 
   const ButtonSubmit = () => {
@@ -226,9 +238,15 @@ export default function UpdateProfile() {
   return (
     <>
       <Header />
-      <div className="container mt-3">
+      <div className="container mt-4">
         {loadingPage ? (
           <LoadingComponent />
+        ) : errorLoading ? (
+          <div className="row mt-2 ml-3">
+            <div className="col">
+              <p className="h1 text-danger">Erro ao carregar dados da conta.</p>
+            </div>
+          </div>
         ) : (
           <>
             <div className="row">

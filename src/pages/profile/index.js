@@ -16,6 +16,7 @@ export default function Profile() {
   const [incidents, setIncidents] = useState([]);
   const [ongName, setOngName] = useState("");
   const [loadingPage, setLoadingPage] = useState(true);
+  const [errorLoading, setErrorLoading] = useState(false);
 
   const { firebase } = useContext(FirebaseContext);
 
@@ -36,9 +37,12 @@ export default function Profile() {
           cancelToken: cancelAxios.token,
         });
         setIncidents(response.data);
+        setErrorLoading(false);
       } catch (error) {
         if (Axios.isCancel(error)) {
         } else {
+          setErrorLoading(true);
+          setLoadingPage(false);
           throw error;
         }
       }
@@ -83,7 +87,13 @@ export default function Profile() {
                 <p className="h1">Casos cadastrados</p>
               </div>
             </div>
-            {incidents.length === 0 ? (
+            {errorLoading ? (
+              <div className="row mt-2 ml-3">
+                <div className="col">
+                  <p className="h1 text-danger">Erro ao carregar os casos.</p>
+                </div>
+              </div>
+            ) : incidents.length === 0 ? (
               <div className="row mt-2">
                 <div className="col-md">
                   <p className="h3">Não há casos cadastrados.</p>

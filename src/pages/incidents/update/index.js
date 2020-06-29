@@ -46,6 +46,7 @@ export default function UpdateIncident() {
   const [displayErrorMessage, setDisplayErrorMessage] = useState(false);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
   const [loadingPage, setLoadingPage] = useState(true);
+  const [errorLoading, setErrorLoading] = useState(false);
 
   const { id } = useParams();
 
@@ -62,16 +63,15 @@ export default function UpdateIncident() {
         const response = await api.get(`incidents/${id}`, {
           cancelToken: cancelAxios.token,
         });
-        if (response.status === 200) {
-          setValue("title", response.data.title);
-          setValue("description", response.data.description);
-          setValue("value", Number(response.data.value));
-          setIncident(response.data);
-        }
+        setValue("title", response.data.title);
+        setValue("description", response.data.description);
+        setValue("value", Number(response.data.value));
+        setIncident(response.data);
         setLoadingPage(false);
       } catch (error) {
         if (Axios.isCancel(error)) {
         } else {
+          setErrorLoading(true);
           setLoadingPage(false);
           throw error;
         }
@@ -124,11 +124,11 @@ export default function UpdateIncident() {
   return (
     <>
       <Header />
-      <div className="container mt-5">
+      <div className="container mt-5 mb-3">
         {loadingPage ? (
           <LoadingComponent />
-        ) : !incident ? (
-          <div className="row">
+        ) : errorLoading ? (
+          <div className="row mt-2 ml-3">
             <div className="col-0 ml-3">
               <Link to={routes.profile} className="btn btn-default icon-fa">
                 <i className="fas fa-arrow-left" />

@@ -68,13 +68,13 @@ export default function UpdatePassword() {
         history.push(String(routes.login));
       } else {
         setLoadingSubmit(false);
-        setDisplayErrorMessage(true);
         setErrorMessage("Senha inválida.");
+        setDisplayErrorMessage(true);
       }
     } catch (error) {
       setLoadingSubmit(false);
-      setDisplayErrorMessage(true);
       setErrorMessage("Erro ao atualizar a senha.");
+      setDisplayErrorMessage(true);
     }
   }
 

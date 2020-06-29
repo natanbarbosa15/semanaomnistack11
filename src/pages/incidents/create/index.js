@@ -87,7 +87,7 @@ export default function NewIncident() {
   return (
     <>
       <Header />
-      <div className="container mt-5">
+      <div className="container mt-5 mb-3">
         <div className="row">
           <div className="col-lg-6">
             <section>

@@ -34,11 +34,9 @@ export default function ReadIncident() {
         const response = await api.get(`incidents/${id}`, {
           cancelToken: cancelAxios.token,
         });
-        if (response.status === 200) {
-          response.data.whatsappUri = response.data.whatsapp;
-          response.data.whatsapp = handleWhatsappData(response.data.whatsapp);
-          setIncident(response.data);
-        }
+        response.data.whatsappUri = response.data.whatsapp;
+        response.data.whatsapp = handleWhatsappData(response.data.whatsapp);
+        setIncident(response.data);
         setLoadingPage(false);
       } catch (error) {
         if (Axios.isCancel(error)) {

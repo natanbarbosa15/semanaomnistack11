@@ -148,8 +148,12 @@ export default function Register() {
       history.push(String(routes.login));
     } catch (error) {
       setLoadingSubmit(false);
+      if (error.response && error.response.data.message) {
+        setErrorMessage(error.response.data.message);
+      } else {
+        setErrorMessage("Erro ao realizar o cadastro.");
+      }
       setDisplayErrorMessage(true);
-      setErrorMessage(error.response.data.message);
     }
   }
 

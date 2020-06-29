@@ -12,6 +12,7 @@ import LoadingComponent from "~/components/loading";
 export default function Incidents() {
   const [incidents, setIncidents] = useState([]);
   const [loadingPage, setLoadingPage] = useState(true);
+  const [errorLoading, setErrorLoading] = useState(false);
 
   const cancelAxios = Axios.CancelToken.source();
   const api = Api();
@@ -24,9 +25,12 @@ export default function Incidents() {
         });
         setIncidents(response.data);
         setLoadingPage(false);
+        setErrorLoading(false);
       } catch (error) {
         if (Axios.isCancel(error)) {
         } else {
+          setErrorLoading(true);
+          setLoadingPage(false);
           throw error;
         }
       }
@@ -52,6 +56,12 @@ export default function Incidents() {
         </div>
         {loadingPage ? (
           <LoadingComponent />
+        ) : errorLoading ? (
+          <div className="row mt-2 ml-3">
+            <div className="col">
+              <p className="h1 text-danger">Erro ao carregar os casos.</p>
+            </div>
+          </div>
         ) : incidents.length === 0 ? (
           <div className="row mt-2">
             <div className="col">
