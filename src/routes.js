@@ -1,26 +1,30 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 import routes from "./constants/routes.js";
 
 import FirebaseContext from "./services/firebase";
 
-import Index from "./pages/index";
-import Incidents from "./pages/incidents/index";
-import ReadIncident from "./pages/incidents/read/index.js";
-import Login from "./pages/login";
-import Register from "./pages/ongs/create";
-import About from "./pages/about";
-import Tutorial from "./pages/tutorial";
-import UseTerms from "./pages/useTerms";
-import PrivacyTerms from "./pages/privacyTerms";
-import Profile from "./pages/profile";
-import UpdateProfile from "./pages/ongs/update";
-import UpdatePassword from "./pages/ongs/password";
-import NewIncident from "./pages/incidents/create";
-import UpdateIncident from "./pages/incidents/update";
-import NotFound from "./pages/notFound";
 import Loading from "./pages/loading";
+import ErrorBoundary from "./components/errorBoundary";
+
+const Index = React.lazy(() => import("./pages/index"));
+const Incidents = React.lazy(() => import("./pages/incidents/index"));
+const ReadIncident = React.lazy(() =>
+  import("./pages/incidents/read/index.js")
+);
+const Login = React.lazy(() => import("./pages/login"));
+const Register = React.lazy(() => import("./pages/ongs/create"));
+const About = React.lazy(() => import("./pages/about"));
+const Tutorial = React.lazy(() => import("./pages/tutorial"));
+const UseTerms = React.lazy(() => import("./pages/useTerms"));
+const PrivacyTerms = React.lazy(() => import("./pages/privacyTerms"));
+const Profile = React.lazy(() => import("./pages/profile"));
+const UpdateProfile = React.lazy(() => import("./pages/ongs/update"));
+const UpdatePassword = React.lazy(() => import("./pages/ongs/password"));
+const NewIncident = React.lazy(() => import("./pages/incidents/create"));
+const UpdateIncident = React.lazy(() => import("./pages/incidents/update"));
+const NotFound = React.lazy(() => import("./pages/notFound"));
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <FirebaseContext.Consumer>
@@ -43,35 +47,47 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 
 const Routes = () => (
   <BrowserRouter>
-    <Switch>
-      <Route exact path={routes.home} component={Index} />
-      <Route exact path={routes.incidents} component={Incidents} />
-      <Route exact path={routes.incidents + "/:id"} component={ReadIncident} />
-      <Route path={routes.login} component={Login} />
-      <Route path={routes.register} component={Register} />
-      <Route path={routes.about} component={About} />
-      <Route path={routes.tutorial} component={Tutorial} />
-      <Route path={routes.useTerms} component={UseTerms} />
-      <Route path={routes.privacyTerms} component={PrivacyTerms} />
-      <PrivateRoute exact path={routes.profile} component={Profile} />
-      <PrivateRoute exact path={routes.newIncident} component={NewIncident} />
-      <PrivateRoute
-        exact
-        path={routes.updateIncident + "/:id"}
-        component={UpdateIncident}
-      />
-      <PrivateRoute
-        exact
-        path={routes.updateProfile}
-        component={UpdateProfile}
-      />
-      <PrivateRoute
-        exact
-        path={routes.updatePassword}
-        component={UpdatePassword}
-      />
-      <Route component={NotFound} />
-    </Switch>
+    <ErrorBoundary>
+      <Suspense fallback={Loading()}>
+        <Switch>
+          <Route exact path={routes.home} component={Index} />
+          <Route exact path={routes.incidents} component={Incidents} />
+          <Route
+            exact
+            path={routes.incidents + "/:id"}
+            component={ReadIncident}
+          />
+          <Route path={routes.login} component={Login} />
+          <Route path={routes.register} component={Register} />
+          <Route path={routes.about} component={About} />
+          <Route path={routes.tutorial} component={Tutorial} />
+          <Route path={routes.useTerms} component={UseTerms} />
+          <Route path={routes.privacyTerms} component={PrivacyTerms} />
+          <PrivateRoute exact path={routes.profile} component={Profile} />
+          <PrivateRoute
+            exact
+            path={routes.newIncident}
+            component={NewIncident}
+          />
+          <PrivateRoute
+            exact
+            path={routes.updateIncident + "/:id"}
+            component={UpdateIncident}
+          />
+          <PrivateRoute
+            exact
+            path={routes.updateProfile}
+            component={UpdateProfile}
+          />
+          <PrivateRoute
+            exact
+            path={routes.updatePassword}
+            component={UpdatePassword}
+          />
+          <Route component={NotFound} />
+        </Switch>
+      </Suspense>
+    </ErrorBoundary>
   </BrowserRouter>
 );
 

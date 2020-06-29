@@ -72,7 +72,7 @@ export default function About() {
                   rel="nofollow noopener noreferrer"
                   target="_blank"
                 >
-                  https://github.com/NatanNMB15/semanaomnistack11
+                  Repositório no GitHub
                 </a>
               </p>
             </div>
