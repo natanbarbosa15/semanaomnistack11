@@ -128,6 +128,11 @@ module.exports = {
 
       return response.status(200).send();
     } catch (error) {
+      if (error.errorInfo.code === "auth/email-already-exists") {
+        return response
+          .status(400)
+          .send({ message: "O Email fornecido já está cadastrado." });
+      }
       console.error(error);
       return response.status(500).send("Internal Server Error");
     }
