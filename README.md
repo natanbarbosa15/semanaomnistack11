@@ -6,7 +6,7 @@
 
 Necessário estar com o Node JS versão 12 instalado.
 
-Executar o comando abaixo para instalar as depedências:
+Executar o comando abaixo para instalar as dependências:
 
 Utilizando Yarn:
 
@@ -22,7 +22,7 @@ npm install
 
 ## 2. Configurar variáveis de ambiente
 
-É necessário configurar as variáveis de ambiente da URL de conexão com Back-End (API), do Firebase e do Google Maps Embed API que serão utilizadas pela ReactJS. Há dois arquivos disponíveis o de desenvolvimento e de produção.
+É necessário configurar as variáveis de ambiente, como a URL de conexão com Back-End (API), credenciais do Firebase e do Google Maps Embed API que serão utilizadas pela ReactJS. Há dois arquivos de configurações disponíveis o de desenvolvimento e de produção, ".env.development.example" e ".env.production.example".
 
 <a href="https://firebase.google.com/docs/web/setup?hl=pt-br#aplicativos-node.js" target="_blank">Tutorial Firebase</a>
 
@@ -46,7 +46,7 @@ npm dev
 
 ## 4. Realizar a "Build" para o ambiente de produção
 
-Para executar a Build é necessário ter o arquivo ".env" com as variáveis de ambientes de produção. Execute com o seguinte comando:
+Para executar a Build é necessário ter o arquivo ".env" (renomear o arquivo ".env.production.example" para ".env") com as variáveis de ambientes de produção. Execute a "Build" com o seguinte comando:
 
 Utilizando Yarn:
 
