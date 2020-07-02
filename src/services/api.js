@@ -1,3 +1,4 @@
+import Constants from "expo-constants";
 import axios from "axios";
 
 /* Endereços para cada emulador/simulador:
@@ -6,7 +7,7 @@ import axios from "axios";
  ** Simulador IOS:           http://localhost:3333/
  */
 const api = axios.create({
-  baseURL: "http://localhost:3333/",
+  baseURL: String(Constants.manifest.extra.apiUrl),
 });
 
 export default api;
