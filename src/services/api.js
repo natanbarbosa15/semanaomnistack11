@@ -6,8 +6,31 @@ import axios from "axios";
  ** Emulador Android Studio: http://10.0.2.2:3333/
  ** Simulador IOS:           http://localhost:3333/
  */
-const api = axios.create({
-  baseURL: String(Constants.manifest.extra.apiUrl),
-});
 
-export default api;
+function Api(firebase) {
+  const api = axios.create({
+    baseURL: String(Constants.manifest.extra.apiUrl),
+    timeout: 10000,
+  });
+
+  api.interceptors.request.use(async (config) => {
+    if (firebase) {
+      const signed = await firebase.isSignedIn();
+      if (signed) {
+        const token = await firebase.getIdToken();
+        if (token) {
+          if (process.env.NODE_ENV === "production") {
+            config.headers.Authorization = `Bearer ${token}`;
+          } else {
+            config.headers["x-endpoint-api-userinfo"] = `${token}`;
+          }
+        }
+      }
+    }
+    return config;
+  });
+
+  return api;
+}
+
+export default Api;

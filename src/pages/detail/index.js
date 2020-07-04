@@ -2,21 +2,31 @@ import React, { useState, useEffect } from "react";
 import MapView, { Marker } from "react-native-maps";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import {
-  View,
-  Image,
-  TouchableOpacity,
-  Text,
-  Linking,
-  FlatList,
-  Alert,
-} from "react-native";
+import { Image, TouchableOpacity, Linking, Alert } from "react-native";
 import * as Location from "expo-location";
 import * as MailComposer from "expo-mail-composer";
 
 import logoImg from "../../assets/logo.png";
 
 import styles from "./styles";
+
+import {
+  Container,
+  Header,
+  ContactBox,
+  HeroTitle,
+  HeroDescription,
+  IncidentList,
+  Incident,
+  IncidentProperty,
+  IncidentValue,
+  Actions,
+  Action,
+  ActionText,
+  AddresBox,
+  AddressText,
+  MapBox,
+} from "@components/styles";
 
 export default function Detail() {
   const navigation = useNavigation();
@@ -89,82 +99,86 @@ export default function Detail() {
             " - " +
             incidents[0].state;
           const coordinates = await Location.geocodeAsync(String(adress));
-          const map = {
-            latitude: coordinates[0].latitude,
-            longitude: coordinates[0].longitude,
-            latitudeDelta: 0.014,
-            longitudeDelta: 0.014,
-          };
-          setMapCoordinates(map);
+          if (
+            coordinates &&
+            coordinates.length > 0 &&
+            coordinates[0].latitude &&
+            coordinates[0].longitude
+          ) {
+            const map = {
+              latitude: coordinates[0].latitude,
+              longitude: coordinates[0].longitude,
+              latitudeDelta: 0.014,
+              longitudeDelta: 0.014,
+            };
+            setMapCoordinates(map);
+          }
           setLoading(false);
         }
       }
     }
     loadMap();
-  }, [mapCoordinates]);
+  }, []);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
+    <Container>
+      <Header>
         <TouchableOpacity onPress={navigateBack}>
           <Feather name="arrow-left" size={28} color="#E02041" />
         </TouchableOpacity>
 
         <Image style={styles.logo} source={logoImg} />
-      </View>
+      </Header>
 
-      <FlatList
+      <IncidentList
         data={incidents}
-        style={styles.incidentList}
         keyExtractor={(incident) => String(incident.id)}
         showsVerticalScrollIndicator={false}
         renderItem={({ item: incident }) => (
           <>
-            <View style={styles.incident}>
-              <Text style={(styles.incidentProperty, { marginTop: 0 })}>
-                ONG:
-              </Text>
-              <Text style={styles.incidentValue}>
+            <Incident>
+              <IncidentProperty>ONG:</IncidentProperty>
+              <IncidentValue>
                 {incident.name} de {incident.city}/{incident.state}
-              </Text>
+              </IncidentValue>
 
-              <Text style={styles.incidentProperty}>Caso:</Text>
-              <Text style={styles.incidentValue}>{incident.description}</Text>
+              <IncidentProperty>Caso:</IncidentProperty>
+              <IncidentValue>{incident.description}</IncidentValue>
 
-              <Text style={styles.incidentProperty}>Valor:</Text>
-              <Text style={styles.incidentValue}>
+              <IncidentProperty>Valor:</IncidentProperty>
+              <IncidentValue>
                 {Intl.NumberFormat("pt-BR", {
                   style: "currency",
                   currency: "BRL",
                 }).format(incident.value)}
-              </Text>
-            </View>
+              </IncidentValue>
+            </Incident>
 
-            <View style={styles.contactBox}>
-              <Text style={styles.heroTitle}>Salve o dia!</Text>
-              <Text style={styles.heroTitle}>Seja o herói deste caso.</Text>
+            <ContactBox>
+              <HeroTitle>Salve o dia!</HeroTitle>
+              <HeroTitle>Seja o herói deste caso.</HeroTitle>
 
-              <Text style={styles.heroDescription}>Entre em contato:</Text>
+              <HeroDescription>Entre em contato:</HeroDescription>
 
-              <View style={styles.actions}>
-                <TouchableOpacity style={styles.action} onPress={sendWhatsapp}>
-                  <Text style={styles.actionText}>WhatsApp</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.action} onPress={sendMail}>
-                  <Text style={styles.actionText}>Email</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
+              <Actions>
+                <Action onPress={sendWhatsapp}>
+                  <ActionText>WhatsApp</ActionText>
+                </Action>
+                <Action onPress={sendMail}>
+                  <ActionText>Email</ActionText>
+                </Action>
+              </Actions>
+            </ContactBox>
 
-            <View style={styles.addresBox}>
-              <Text style={styles.heroTitle}>Endereço</Text>
-              <Text style={styles.incidentValue}>
+            <AddresBox>
+              <HeroTitle>Endereço</HeroTitle>
+              <AddressText>
                 {incident.street} {incident.streetNumber},{" "}
                 {incident.neighborhood}, {incident.city} - {incident.state}, CEP{" "}
                 {incident.cep}
-              </Text>
-              <View style={styles.mapBox}>
-                {loading ? null : (
+              </AddressText>
+              <MapBox>
+                {mapCoordinates ? (
                   <MapView
                     style={styles.mapStyle}
                     provider="google"
@@ -179,12 +193,12 @@ export default function Detail() {
                       onPress={openGps}
                     />
                   </MapView>
-                )}
-              </View>
-            </View>
+                ) : null}
+              </MapBox>
+            </AddresBox>
           </>
         )}
       />
-    </View>
+    </Container>
   );
 }
