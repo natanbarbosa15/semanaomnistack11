@@ -22,11 +22,33 @@ npm install
 
 ## 2. Configurar variáveis de ambiente
 
-É necessário configurar as variáveis de ambiente, como a URL de conexão com Back-End (API), credenciais do Firebase e do Google Maps Embed API que serão utilizadas pela ReactJS. Há dois arquivos de configurações disponíveis o de desenvolvimento e de produção, ".env.development.example" e ".env.production.example".
+É necessário configurar as variáveis de ambiente, como a URL de conexão com Back-End (API), credenciais do Firebase e do Google Maps Embed API que serão utilizadas pela ReactJS. Há dois arquivos de configurações disponíveis o de desenvolvimento e de produção, ".env.development.example" e ".env.example".
+
+### Firebase e Firebase Performance
 
 <a href="https://firebase.google.com/docs/web/setup?hl=pt-br#aplicativos-node.js" target="_blank">Tutorial Firebase</a>
 
+<a href="https://firebase.google.com/docs/perf-mon/get-started-web" target="_blank">Tutorial Firebase Performance</a>
+
+Necessário configurar as variáveis de credenciais do Firebase. "REACT_APP_FIREBASE_API_KEY", "REACT_APP_FIREBASE_MESSAGING_SENDER_ID", "REACT_APP_FIREBASE_APP_ID" e "REACT_APP_GOOGLE_CLOUD_PROJECT".
+
+### Firebase Analytics
+
+<a href="https://firebase.google.com/docs/analytics/get-started?platform=web" target="_blank">Tutorial Firebase Analytics</a>
+
+Necessário configurar o "measurementId" com a variável "REACT_APP_FIREBASE_MEASUREMENT_ID".
+
+### Google Tag Manager
+
+<a href="https://support.google.com/tagmanager/answer/6103696?hl=en" target="_blank">Tutorial Google Tag Manager</a>
+
+Necessário configurar o ID do Google Tag Manager (GTM-XXXX) com a variável "REACT_APP_GOOGLE_TAG_MANAGER_ID".
+
+### Google Maps Embed API
+
 <a href="https://developers.google.com/maps/documentation/embed/get-api-key" target="_blank">Tutorial Google Maps Embed</a>
+
+Necessário configurar a API Key para utilizar o Google Maps Embed API com a variável "REACT_APP_MAPS_API_KEY".
 
 ## 3. Executar na máquina local
 
@@ -46,7 +68,7 @@ npm dev
 
 ## 4. Realizar a "Build" para o ambiente de produção
 
-Para executar a Build é necessário ter o arquivo ".env" (renomear o arquivo ".env.production.example" para ".env") com as variáveis de ambientes de produção. Execute a "Build" com o seguinte comando:
+Para executar a Build é necessário ter o arquivo ".env" com as variáveis de ambientes de produção. Execute a "Build" com o seguinte comando:
 
 Utilizando Yarn:
 

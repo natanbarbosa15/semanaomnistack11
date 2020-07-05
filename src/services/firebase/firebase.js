@@ -1,20 +1,25 @@
 import firebase from "firebase/app";
 import "firebase/auth";
-
-const config = {
-  apiKey: `${process.env.REACT_APP_FIREBASE_API_KEY}`,
-  authDomain: `${process.env.GOOGLE_CLOUD_PROJECT}.firebaseapp.com`,
-  databaseURL: `https://${process.env.GOOGLE_CLOUD_PROJECT}.firebaseio.com`,
-  projectId: `${process.env.GOOGLE_CLOUD_PROJECT}`,
-  storageBucket: `${process.env.GOOGLE_CLOUD_PROJECT}.appspot.com`,
-  messagingSenderId: `${process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID}`,
-  appID: `${process.env.REACT_APP_FIREBASE_APP_ID}`,
-};
+import "firebase/analytics";
+import "firebase/performance";
 
 class Firebase {
   constructor() {
+    const config = {
+      apiKey: `${process.env.REACT_APP_FIREBASE_API_KEY}`,
+      authDomain: `${process.env.REACT_APP_GOOGLE_CLOUD_PROJECT}.firebaseapp.com`,
+      databaseURL: `https://${process.env.REACT_APP_GOOGLE_CLOUD_PROJECT}.firebaseio.com`,
+      projectId: `${process.env.REACT_APP_GOOGLE_CLOUD_PROJECT}`,
+      storageBucket: `${process.env.REACT_APP_GOOGLE_CLOUD_PROJECT}.appspot.com`,
+      messagingSenderId: `${process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID}`,
+      appId: `${process.env.REACT_APP_FIREBASE_APP_ID}`,
+      measurementId: `${process.env.REACT_APP_FIREBASE_MEASUREMENT_ID}`,
+    };
+
     !firebase.apps.length ? firebase.initializeApp(config) : firebase.app();
     this.auth = firebase.auth();
+    this.analytics = firebase.analytics();
+    this.perf = firebase.performance();
     this.auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
   }
 

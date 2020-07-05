@@ -3,6 +3,7 @@ import axios from "axios";
 function Api(firebase) {
   const api = axios.create({
     baseURL: process.env.REACT_APP_API_URL,
+    timeout: 15000,
   });
 
   api.interceptors.request.use(async (config) => {
