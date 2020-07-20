@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Be The Hero",
-    "slug": "bethehero",
+    "slug": "behero",
     "privacy": "public",
     "sdkVersion": "36.0.0",
     "platforms": ["ios", "android"],
@@ -19,7 +19,7 @@
     },
     "assetBundlePatterns": ["**/*"],
     "android": {
-      "package": "com.barbosanatan.behero",
+      "package": "com.barbosa.natan.behero",
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon_adaptive.png",
         "backgroundColor": "#FFFFFF"
@@ -28,7 +28,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.barbosanatan.behero"
+      "bundleIdentifier": "com.barbosa.natan.behero"
     }
   }
 }
